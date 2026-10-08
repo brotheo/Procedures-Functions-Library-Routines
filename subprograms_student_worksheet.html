@@ -1,0 +1,334 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Student Worksheet — Subprograms</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Source+Sans+3:wght@400;600;700&family=Source+Serif+4:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1d2433;--muted:#5b6475;--line:#d8dce4;--paper:#ffffff;--bg:#f3f1ec;--accent:#1f5f8b;--accent-soft:#e7f0f6;--ans:#1e7a4a;--ans-soft:#eaf6ef;--code-bg:#f6f7f9;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 "Source Sans 3",system-ui,sans-serif}
+.wrap{max-width:860px;margin:0 auto;padding:32px 16px 64px}
+header.cover{background:var(--paper);border:1px solid var(--line);border-top:6px solid var(--accent);border-radius:10px;padding:28px 28px 22px;margin-bottom:24px}
+.eyebrow{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);font-weight:700}
+h1{font-family:"Source Serif 4",Georgia,serif;font-size:30px;line-height:1.2;margin:6px 0 4px}
+.sub{color:var(--muted);margin:0}
+.meta{display:flex;flex-wrap:wrap;gap:12px 28px;margin-top:20px}
+.meta label{flex:1 1 200px;font-size:14px;color:var(--muted)}
+.meta span.fill{display:block;border-bottom:1.5px solid var(--ink);height:26px}
+.meta .pill{background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:4px 12px;font-weight:700;font-size:14px;align-self:flex-end}
+.toolbar{display:flex;gap:10px;margin:0 0 24px;flex-wrap:wrap}
+button{font:inherit;font-weight:600;border:1px solid var(--accent);background:var(--accent);color:#fff;border-radius:8px;padding:8px 16px;cursor:pointer}
+button.ghost{background:transparent;color:var(--accent)}
+section.ch{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:24px 28px;margin-bottom:24px}
+.ch-head{display:flex;justify-content:space-between;gap:12px;align-items:baseline;border-bottom:1px solid var(--line);padding-bottom:10px;margin-bottom:14px}
+.ch-head h2{font-family:"Source Serif 4",Georgia,serif;font-size:22px;margin:0}
+.ch-head .num{color:var(--accent);font-weight:700;font-size:13px;letter-spacing:.06em;text-transform:uppercase;display:block}
+.ch-head .tot{white-space:nowrap;font-weight:700;color:var(--muted)}
+.skill{display:inline-block;font-size:13px;color:var(--muted);margin-bottom:8px}
+.scen{margin-bottom:6px}
+h3{font-size:15px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:18px 0 6px}
+.q{display:grid;grid-template-columns:34px 1fr auto;gap:0 10px;padding:14px 0;border-top:1px dashed var(--line)}
+.q:first-of-type{border-top:0}
+.qn{font-weight:700;color:var(--accent)}
+.mk{font-weight:700;white-space:nowrap}
+.qbody p{margin:0 0 8px}
+.qbody ul,.qbody ol,.scen ul,.scen ol{margin:0 0 8px;padding-left:22px}
+code{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-size:.88em;background:var(--code-bg);border:1px solid var(--line);border-radius:4px;padding:0 4px}
+pre.code{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-size:14px;line-height:1.5;background:var(--code-bg);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:6px;padding:10px 14px;margin:6px 0 10px;overflow-x:auto;white-space:pre}
+table{border-collapse:collapse;margin:6px 0 12px;min-width:240px}
+th,td{border:1px solid var(--line);padding:6px 12px;text-align:left;vertical-align:top}
+th{background:var(--accent-soft)}
+.lines{margin-top:6px}
+.lines div{border-bottom:1px solid #b9bfca;height:30px}
+.codebox{margin-top:6px;border:1px solid #b9bfca;border-radius:6px;background-image:repeating-linear-gradient(to bottom,transparent 0 29px,#e3e6ec 29px 30px);font-family:"JetBrains Mono",monospace}
+.fields{display:flex;flex-wrap:wrap;gap:10px 28px;margin-top:6px}
+.fields label{display:flex;align-items:flex-end;gap:8px;font-family:"JetBrains Mono",monospace;font-size:14px}
+.fields span{display:inline-block;width:120px;border-bottom:1px solid #b9bfca;height:24px}
+td.blank{height:56px;min-width:340px}
+.answer{grid-column:2 / 4;margin-top:10px;background:var(--ans-soft);border:1px solid #bfe2cc;border-radius:8px;padding:12px 14px}
+.answer .lbl{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ans);margin-bottom:4px}
+.answer p{margin:0 0 6px}
+.answer pre.code{background:#fff;border-left-color:var(--ans)}
+.answer ul.ms{margin:4px 0 0;padding-left:0;list-style:none}
+.answer ul.ms li{padding-left:22px;position:relative;margin-bottom:3px}
+.answer ul.ms li::before{content:"✓";position:absolute;left:2px;color:var(--ans);font-weight:700}
+.notes{background:var(--paper);border:1px solid var(--line);border-left:4px solid var(--ans);border-radius:10px;padding:20px 28px;margin-bottom:24px}
+.notes h2{font-family:"Source Serif 4",Georgia,serif;font-size:20px;margin:0 0 8px}
+.notes ol,.notes ul{margin:0 0 8px;padding-left:22px}
+.summary td:last-child,.summary th:last-child{text-align:right}
+footer{text-align:center;color:var(--muted);font-size:14px}
+@media (max-width:600px){section.ch,header.cover,.notes{padding:18px 16px}.q{grid-template-columns:26px 1fr auto}td.blank{min-width:160px}h1{font-size:24px}}
+@media print{body{background:#fff;font-size:12pt}.wrap{max-width:none;padding:0}.toolbar{display:none}header.cover,section.ch,.notes{border:none;padding:0 0 10px;margin-bottom:14px}header.cover{border-top:4px solid var(--accent);padding-top:12px}section.ch{break-before:page}section.ch:first-of-type{break-before:auto}.q{break-inside:avoid}pre.code{white-space:pre-wrap}}
+</style></head><body><div class="wrap">
+<header class="cover"><div class="eyebrow">IGCSE Computer Science · Paper 2 Practice · Student worksheet</div><h1>Procedures, Functions &amp; Library Routines</h1><p class="sub">10 challenges · 92 marks · Write all answers in Cambridge pseudocode.</p><div class="meta">
+<label>Name<span class="fill"></span></label><label>Class<span class="fill"></span></label><label>Date<span class="fill"></span></label><label>Score<span class="fill"></span></label><span class="pill">/ 92</span>
+</div></header>
+<div class="toolbar"><button onclick="window.print()">Print / Save as PDF</button><button class="ghost" onclick="dl()">Download this page</button></div>
+<section class="ch"><div class="ch-head"><div><span class="num">Challenge 1</span><h2>Student Score Calculator</h2></div><span class="tot">8 marks</span></div>
+<div class="scen"><p>A school records three test scores for each student. The final score is the average of the three scores.</p>
+<p>The final score must be rounded to the nearest whole number.</p></div><h3>Tasks</h3>
+<div class="q"><div class="qn">1.</div><div class="qbody"><p>Write a function called <code>CalculateAverage</code> with three parameters. The function should:</p>
+<ul><li>calculate the average;</li><li>round the average to 0 decimal places;</li><li>return the result.</li></ul>
+<div class="codebox" style="height:240px"></div>
+</div><div class="mk">[4]</div>
+</div>
+<div class="q"><div class="qn">2.</div><div class="qbody"><p>The following pseudocode is executed:</p>
+<pre class="code">Score ← CalculateAverage(72, 85, 76)
+OUTPUT Score</pre>
+<p>State the value output.</p>
+<div class="lines"><div></div></div>
+</div><div class="mk">[1]</div>
+</div>
+<div class="q"><div class="qn">3.</div><div class="qbody"><p>State whether the variable <code>Average</code> used inside the function is a <strong>local</strong> or <strong>global</strong> variable.</p>
+<div class="lines"><div></div></div>
+</div><div class="mk">[1]</div>
+</div>
+<div class="q"><div class="qn">4.</div><div class="qbody"><p>Explain why <code>CalculateAverage</code> is a function.</p>
+<div class="lines"><div></div><div></div><div></div></div>
+</div><div class="mk">[2]</div>
+</div>
+</section>
+<section class="ch"><div class="ch-head"><div><span class="num">Challenge 2</span><h2>Cinema Ticket System</h2></div><span class="tot">10 marks</span></div>
+<div class="scen"><p>A cinema sells three types of tickets.</p>
+<table><thead><tr><th>Ticket</th><th>Price</th></tr></thead><tbody><tr><td>Child</td><td>120</td></tr><tr><td>Student</td><td>180</td></tr><tr><td>Adult</td><td>250</td></tr></tbody></table>
+<p>A customer enters the number of each type of ticket purchased.</p></div><h3>Tasks</h3>
+<div class="q"><div class="qn">1.</div><div class="qbody"><p>Write a function:</p>
+<pre class="code">FUNCTION CalculateCost(Children, Students, Adults)</pre>
+<p>The function should calculate and return the total cost.</p>
+<div class="codebox" style="height:210px"></div>
+</div><div class="mk">[4]</div>
+</div>
+<div class="q"><div class="qn">2.</div><div class="qbody"><p>The following statement is executed:</p>
+<pre class="code">Total ← CalculateCost(2, 3, 1)</pre>
+<p>State the value stored in <code>Total</code>.</p>
+<div class="lines"><div></div></div>
+</div><div class="mk">[1]</div>
+</div>
+<div class="q"><div class="qn">3.</div><div class="qbody"><p>Write a procedure:</p>
+<pre class="code">PROCEDURE DisplayCost(Name, Total)</pre>
+<p>The procedure should output the customer&#x27;s name and total cost.</p>
+<div class="codebox" style="height:150px"></div>
+</div><div class="mk">[3]</div>
+</div>
+<div class="q"><div class="qn">4.</div><div class="qbody"><p>Explain one difference between <code>CalculateCost</code> and <code>DisplayCost</code>.</p>
+<div class="lines"><div></div><div></div><div></div></div>
+</div><div class="mk">[2]</div>
+</div>
+</section>
+<section class="ch"><div class="ch-head"><div><span class="num">Challenge 3</span><h2>Journey Time</h2></div><span class="tot">10 marks</span></div>
+<div class="scen"><p>A computer stores the duration of a journey in seconds. For example:</p>
+<pre class="code">TotalSeconds ← 7385</pre>
+<p>The program must convert the value into hours, minutes and seconds.</p></div><h3>Tasks</h3>
+<div class="q"><div class="qn">1.</div><div class="qbody"><p>Complete the pseudocode.</p>
+<pre class="code">Hours ← TotalSeconds DIV ______
+
+Remaining ← TotalSeconds MOD ______
+
+Minutes ← Remaining DIV ______
+
+Seconds ← Remaining MOD ______</pre>
+</div><div class="mk">[4]</div>
+</div>
+<div class="q"><div class="qn">2.</div><div class="qbody"><p>State the values of <code>Hours</code>, <code>Minutes</code> and <code>Seconds</code> when <code>TotalSeconds ← 7385</code>.</p>
+<div class="fields"><label>Hours =<span></span></label><label>Minutes =<span></span></label><label>Seconds =<span></span></label></div>
+</div><div class="mk">[3]</div>
+</div>
+<div class="q"><div class="qn">3.</div><div class="qbody"><p>Write a function:</p>
+<pre class="code">FUNCTION GetMinutes(TotalSeconds)</pre>
+<p>The function should return only the number of complete minutes after the hours have been removed.</p>
+<div class="codebox" style="height:180px"></div>
+</div><div class="mk">[3]</div>
+</div>
+</section>
+<section class="ch"><div class="ch-head"><div><span class="num">Challenge 4</span><h2>Random Prize</h2></div><span class="tot">5 marks</span></div>
+<div class="scen"><p>A game gives a player a random prize number from <strong>1 to 20 inclusive</strong>.</p></div><h3>Tasks</h3>
+<div class="q"><div class="qn">1.</div><div class="qbody"><p>Complete the function:</p>
+<pre class="code">FUNCTION GeneratePrize()
+
+    Prize ← __________________
+
+    RETURN Prize
+
+ENDFUNCTION</pre>
+<div class="lines"><div></div></div>
+</div><div class="mk">[2]</div>
+</div>
+<div class="q"><div class="qn">2.</div><div class="qbody"><p>Write a statement that calls the function and stores the returned value in <code>PrizeNumber</code>.</p>
+<div class="lines"><div></div></div>
+</div><div class="mk">[1]</div>
+</div>
+<div class="q"><div class="qn">3.</div><div class="qbody"><p>State the smallest possible value returned by the function.</p>
+<div class="lines"><div></div></div>
+</div><div class="mk">[1]</div>
+</div>
+<div class="q"><div class="qn">4.</div><div class="qbody"><p>State the largest possible value returned by the function.</p>
+<div class="lines"><div></div></div>
+</div><div class="mk">[1]</div>
+</div>
+</section>
+<section class="ch"><div class="ch-head"><div><span class="num">Challenge 5</span><h2>Even or Odd Student ID</h2></div><span class="tot">7 marks</span></div>
+<div class="scen"><p>A school wants to determine whether a student&#x27;s ID number is even or odd.</p></div><h3>Tasks</h3>
+<div class="q"><div class="qn">1.</div><div class="qbody"><p>Write a function:</p>
+<pre class="code">FUNCTION IsEven(ID)</pre>
+<p>The function should return <code>TRUE</code> if the ID is even and <code>FALSE</code> if the ID is odd. You must use <code>MOD</code>.</p>
+<div class="codebox" style="height:240px"></div>
+</div><div class="mk">[3]</div>
+</div>
+<div class="q"><div class="qn">2.</div><div class="qbody"><pre class="code">Result ← IsEven(246)</pre>
+<p>State the value of <code>Result</code>.</p>
+<div class="lines"><div></div></div>
+</div><div class="mk">[1]</div>
+</div>
+<div class="q"><div class="qn">3.</div><div class="qbody"><pre class="code">Result ← IsEven(315)</pre>
+<p>State the value of <code>Result</code>.</p>
+<div class="lines"><div></div></div>
+</div><div class="mk">[1]</div>
+</div>
+<div class="q"><div class="qn">4.</div><div class="qbody"><p>Explain what the following expression checks:</p>
+<pre class="code">ID MOD 2</pre>
+<div class="lines"><div></div><div></div><div></div></div>
+</div><div class="mk">[2]</div>
+</div>
+</section>
+<section class="ch"><div class="ch-head"><div><span class="num">Challenge 6</span><h2>Examination Grade</h2></div><span class="tot">9 marks</span></div>
+<div class="scen"><p>A school uses the following grading system.</p>
+<table><thead><tr><th>Mark</th><th>Grade</th></tr></thead><tbody><tr><td>80–100</td><td>A</td></tr><tr><td>70–79</td><td>B</td></tr><tr><td>60–69</td><td>C</td></tr><tr><td>50–59</td><td>D</td></tr><tr><td>0–49</td><td>F</td></tr></tbody></table></div><h3>Tasks</h3>
+<div class="q"><div class="qn">1.</div><div class="qbody"><p>Write:</p>
+<pre class="code">FUNCTION GetGrade(Mark)</pre>
+<p>The function should return the correct grade.</p>
+<div class="codebox" style="height:420px"></div>
+</div><div class="mk">[5]</div>
+</div>
+<div class="q"><div class="qn">2.</div><div class="qbody"><p>Write a statement that calls the function for a student with a mark of <code>73</code>. Store the returned value in <code>Grade</code>.</p>
+<div class="lines"><div></div></div>
+</div><div class="mk">[1]</div>
+</div>
+<div class="q"><div class="qn">3.</div><div class="qbody"><p>State the value stored in <code>Grade</code>.</p>
+<div class="lines"><div></div></div>
+</div><div class="mk">[1]</div>
+</div>
+<div class="q"><div class="qn">4.</div><div class="qbody"><p>Explain why <code>GetGrade</code> should return a value rather than simply output the grade.</p>
+<div class="lines"><div></div><div></div><div></div></div>
+</div><div class="mk">[2]</div>
+</div>
+</section>
+<section class="ch"><div class="ch-head"><div><span class="num">Challenge 7</span><h2>School Trip Cost</h2></div><span class="tot">10 marks</span></div>
+<div class="scen"><p>A school trip costs:</p>
+<ul><li>Transport: 500 baht</li><li>Food: 250 baht</li><li>Entrance fee: 300 baht</li></ul>
+<p>Students with a membership receive a <strong>10% discount</strong>.</p>
+<p>The final cost must be rounded to the nearest whole baht.</p></div><h3>Tasks</h3>
+<div class="q"><div class="qn">1.</div><div class="qbody"><p>Write:</p>
+<pre class="code">FUNCTION CalculateCost(Member)</pre>
+<p>The function should:</p>
+<ul><li>calculate the total cost;</li><li>apply the discount if <code>Member</code> is <code>TRUE</code>;</li><li>round the result;</li><li>return the final cost.</li></ul>
+<div class="codebox" style="height:300px"></div>
+</div><div class="mk">[6]</div>
+</div>
+<div class="q"><div class="qn">2.</div><div class="qbody"><p>Write a statement that calculates the cost for a member and stores the result in <code>Cost</code>.</p>
+<div class="lines"><div></div></div>
+</div><div class="mk">[1]</div>
+</div>
+<div class="q"><div class="qn">3.</div><div class="qbody"><p>State the value of <code>Cost</code>.</p>
+<div class="lines"><div></div><div></div></div>
+</div><div class="mk">[2]</div>
+</div>
+<div class="q"><div class="qn">4.</div><div class="qbody"><p>Identify the library routine used to round the final cost.</p>
+<div class="lines"><div></div></div>
+</div><div class="mk">[1]</div>
+</div>
+</section>
+<section class="ch"><div class="ch-head"><div><span class="num">Challenge 8</span><h2>Robot Battery</h2></div><span class="tot">6 marks</span></div>
+<div class="scen"><p>A robot starts with a battery level of 100%.</p>
+<p>Each time the robot performs a task, it uses a random amount of battery between <strong>5 and 15 units inclusive</strong>.</p></div><h3>Tasks</h3>
+<div class="q"><div class="qn">1.</div><div class="qbody"><p>Write:</p>
+<pre class="code">FUNCTION BatteryUsed()</pre>
+<p>The function should return a random value from 5 to 15 inclusive.</p>
+<div class="codebox" style="height:120px"></div>
+</div><div class="mk">[2]</div>
+</div>
+<div class="q"><div class="qn">2.</div><div class="qbody"><p>The main program contains:</p>
+<pre class="code">Battery ← 100
+Used ← BatteryUsed()
+Battery ← Battery - Used</pre>
+<p>If <code>Used</code> is <code>12</code>, state the new value of <code>Battery</code>.</p>
+<div class="lines"><div></div></div>
+</div><div class="mk">[1]</div>
+</div>
+<div class="q"><div class="qn">3.</div><div class="qbody"><p>Write a selection statement that outputs <code>&quot;LOW BATTERY&quot;</code> when the battery is below 20.</p>
+<div class="codebox" style="height:120px"></div>
+</div><div class="mk">[2]</div>
+</div>
+<div class="q"><div class="qn">4.</div><div class="qbody"><p>Explain why <code>BatteryUsed</code> is a function.</p>
+<div class="lines"><div></div><div></div></div>
+</div><div class="mk">[1]</div>
+</div>
+</section>
+<section class="ch"><div class="ch-head"><div><span class="num">Challenge 9</span><h2>Sports Competition</h2></div><span class="tot">13 marks</span></div>
+<div class="scen"><p>A school competition has three events:</p>
+<ul><li>Running</li><li>Swimming</li><li>Cycling</li></ul>
+<p>Each event produces a score from 0 to 100. The total score is calculated by adding the three scores.</p>
+<p>A student passes if the total score is <strong>200 or more</strong>.</p></div><h3>Tasks</h3>
+<div class="q"><div class="qn">1.</div><div class="qbody"><p>Write:</p>
+<pre class="code">FUNCTION CalculateTotal(Running, Swimming, Cycling)</pre>
+<p>The function should return the total score.</p>
+<div class="codebox" style="height:180px"></div>
+</div><div class="mk">[3]</div>
+</div>
+<div class="q"><div class="qn">2.</div><div class="qbody"><p>Write:</p>
+<pre class="code">FUNCTION IsPass(Total)</pre>
+<p>The function should return <code>TRUE</code> if the student passes and <code>FALSE</code> otherwise.</p>
+<div class="codebox" style="height:240px"></div>
+</div><div class="mk">[3]</div>
+</div>
+<div class="q"><div class="qn">3.</div><div class="qbody"><p>The following statements are executed:</p>
+<pre class="code">Total ← CalculateTotal(75, 82, 68)
+Passed ← IsPass(Total)</pre>
+<p>State the values of <code>Total</code> and <code>Passed</code>.</p>
+<div class="fields"><label>Total =<span></span></label><label>Passed =<span></span></label></div>
+</div><div class="mk">[2]</div>
+</div>
+<div class="q"><div class="qn">4.</div><div class="qbody"><p>Write:</p>
+<pre class="code">PROCEDURE DisplayResult(Name, Total, Passed)</pre>
+<p>The procedure should output the student&#x27;s name, total score and either <code>&quot;PASS&quot;</code> or <code>&quot;FAIL&quot;</code>.</p>
+<div class="codebox" style="height:300px"></div>
+</div><div class="mk">[4]</div>
+</div>
+<div class="q"><div class="qn">5.</div><div class="qbody"><p>State one local variable used in either function.</p>
+<div class="lines"><div></div></div>
+</div><div class="mk">[1]</div>
+</div>
+</section>
+<section class="ch"><div class="ch-head"><div><span class="num">Challenge 10</span><h2>Arcade Game</h2></div><span class="tot">14 marks</span></div>
+<div class="scen"><p>An arcade game gives a player a starting score. The game then:</p>
+<ol><li>generates a random bonus between 1 and 10;</li><li>adds the bonus to the starting score;</li><li>rounds the score to a whole number;</li><li>checks whether the final score is even or odd.</li></ol></div><h3>Tasks</h3>
+<div class="q"><div class="qn">1.</div><div class="qbody"><p>Write:</p>
+<pre class="code">FUNCTION CalculateScore(StartingScore)</pre>
+<p>The function should generate the random bonus, add it to the starting score and return the final score.</p>
+<div class="codebox" style="height:270px"></div>
+</div><div class="mk">[4]</div>
+</div>
+<div class="q"><div class="qn">2.</div><div class="qbody"><p>Write:</p>
+<pre class="code">FUNCTION IsEven(Score)</pre>
+<p>Use <code>MOD</code> to determine whether the score is even.</p>
+<div class="codebox" style="height:240px"></div>
+</div><div class="mk">[3]</div>
+</div>
+<div class="q"><div class="qn">3.</div><div class="qbody"><p>Write:</p>
+<pre class="code">PROCEDURE DisplayResult(Name, Score, Even)</pre>
+<p>The procedure should display:</p>
+<ul><li>the player&#x27;s name;</li><li>the final score;</li><li><code>&quot;EVEN&quot;</code> or <code>&quot;ODD&quot;</code>.</li></ul>
+<div class="codebox" style="height:300px"></div>
+</div><div class="mk">[4]</div>
+</div>
+<div class="q"><div class="qn">4.</div><div class="qbody"><p>The main program contains:</p>
+<pre class="code">INPUT Name
+INPUT StartingScore
+
+Score ← CalculateScore(StartingScore)
+Even ← IsEven(Score)
+
+DisplayResult(Name, Score, Even)</pre>
+<p>Explain the purpose of each subprogram.</p>
+<table><thead><tr><th>Subprogram</th><th>Purpose</th></tr></thead><tbody><tr><td><code>CalculateScore</code></td><td class="blank"></td></tr><tr><td><code>IsEven</code></td><td class="blank"></td></tr><tr><td><code>DisplayResult</code></td><td class="blank"></td></tr></tbody></table>
+</div><div class="mk">[3]</div>
+</div>
+</section>
+<footer>End of worksheet · Total 92 marks</footer></div><script>function dl(){const b=new Blob(["<!doctype html>\n"+document.documentElement.outerHTML],{type:"text/html"});const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="subprograms_student_worksheet.html";a.click();URL.revokeObjectURL(a.href);}</script></body></html>
