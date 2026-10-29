@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Standard Methods – Teacher</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f6f7fb;--card:#fff;--ink:#1b1f2a;--muted:#5d6475;--line:#e3e6ee;--brand:#0f766e;--brand-soft:#e6f5f3;
+  --ok:#15803d;--ok-soft:#e8f7ee;--bad:#c2410c;--bad-soft:#fff1e8;--warn:#a16207;--warn-soft:#fff8db;--code-bg:#0f172a;--code-ink:#e2e8f0;--chip:#f1f3f8;}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0d1017;--card:#161a24;--ink:#e7e9ef;--muted:#9aa2b5;--line:#2a3040;--brand:#2dd4bf;--brand-soft:#11302c;
+  --ok:#4ade80;--ok-soft:#12291b;--bad:#fb923c;--bad-soft:#2d1a0e;--warn:#facc15;--warn-soft:#2b2610;--code-bg:#0a0d14;--chip:#1f2430;}}
+:root[data-theme="dark"]{
+  --bg:#0d1017;--card:#161a24;--ink:#e7e9ef;--muted:#9aa2b5;--line:#2a3040;--brand:#2dd4bf;--brand-soft:#11302c;
+  --ok:#4ade80;--ok-soft:#12291b;--bad:#fb923c;--bad-soft:#2d1a0e;--warn:#facc15;--warn-soft:#2b2610;--code-bg:#0a0d14;--chip:#1f2430;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15.5px/1.55 Inter,system-ui,sans-serif}
+.wrap{max-width:1060px;margin:0 auto;padding:0 16px 80px}
+header.hero{background:linear-gradient(135deg,#0f766e,#155e75);color:#fff;padding:26px 16px 20px;position:relative}
+.hero h1{margin:6px 0 4px;font-size:clamp(22px,4vw,32px);letter-spacing:-.02em}
+.hero p{margin:0;opacity:.9}
+.tag{display:inline-block;background:rgba(255,255,255,.18);border-radius:99px;padding:3px 10px;font-size:13px;font-weight:600;margin-right:6px}
+.lock{background:#fde68a;color:#713f12}
+.hbtns{position:absolute;top:14px;right:16px;display:flex;gap:6px}
+.hbtns button{background:rgba(255,255,255,.18);color:#fff;border:0;border-radius:99px;padding:6px 12px;font:600 13px Inter,sans-serif;cursor:pointer}
+.timerbar{position:sticky;top:0;z-index:5;background:var(--card);border-bottom:1px solid var(--line);box-shadow:0 2px 10px rgba(0,0,0,.04)}
+.timerbar .wrap{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:10px 16px}
+.clock{font:700 26px "JetBrains Mono",monospace;min-width:92px}
+.phase-now{font-weight:700}
+.phase-left{color:var(--muted);font-size:13px}
+.btn{font:inherit;font-weight:600;font-size:14px;border:0;border-radius:9px;padding:8px 13px;cursor:pointer;background:var(--brand);color:#fff}
+.btn.ghost{background:var(--chip);color:var(--ink)}
+.track{display:flex;width:100%;height:10px;border-radius:99px;overflow:hidden;background:var(--chip)}
+.track div{height:100%;border-right:2px solid var(--card);cursor:pointer;opacity:.35}
+.track div.past{opacity:.7}.track div.now{opacity:1}
+section.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px;margin:20px 0}
+section.card.now{border:2px solid var(--brand);box-shadow:0 0 0 4px var(--brand-soft)}
+h2{margin:0 0 10px;font-size:21px;letter-spacing:-.01em}
+h3{margin:18px 0 6px;font-size:16px}
+.sec-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+.sec-head h2{margin:0}
+.num{background:var(--brand);color:#fff;border-radius:10px;width:32px;height:32px;display:grid;place-items:center;font-weight:800;flex:none}
+.time{margin-left:auto;background:var(--brand-soft);color:var(--brand);font-weight:700;font-size:13px;border-radius:99px;padding:4px 10px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media (max-width:780px){.grid2,.grid3{grid-template-columns:1fr}}
+.box{border-radius:12px;padding:12px 14px;background:var(--chip)}
+.box h4{margin:0 0 6px;font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.box ul{margin:0;padding-left:18px}
+.say{background:var(--brand-soft);border-left:4px solid var(--brand);border-radius:8px;padding:10px 14px;margin:10px 0}
+.say::before{content:"💬 Say: ";font-weight:700;color:var(--brand)}
+.watch{background:var(--warn-soft);border-left:4px solid var(--warn);border-radius:8px;padding:10px 14px;margin:10px 0}
+.watch::before{content:"👀 Watch for: ";font-weight:700;color:var(--warn)}
+.diff{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+@media (max-width:780px){.diff{grid-template-columns:1fr}}
+.diff div{border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.diff b{display:block;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+pre.code{font:13.5px/1.6 "JetBrains Mono",monospace;background:var(--code-bg);color:var(--code-ink);border-radius:10px;padding:12px 14px;margin:6px 0;overflow:auto;white-space:pre}
+code{font-family:"JetBrains Mono",monospace;background:var(--chip);border-radius:5px;padding:1px 5px;font-size:.92em}
+table{border-collapse:collapse;width:100%}
+th,td{border:1px solid var(--line);padding:8px;text-align:left;vertical-align:top}
+th{background:var(--chip);font-size:12.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+.scroll{overflow-x:auto}
+details{border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin:8px 0}
+details summary{cursor:pointer;font-weight:600}
+.alert{background:var(--bad-soft);border:1px solid var(--bad);color:var(--ink);border-radius:10px;padding:12px 14px;margin:12px 0}
+.alert b{color:var(--bad)}
+.ans{color:var(--ok);font-weight:700}
+ol.plan{padding-left:20px;margin:0}
+ol.plan li{margin:3px 0}
+@media print{
+  .timerbar,.hbtns{display:none}
+  body{background:#fff;color:#000}
+  section.card{break-inside:avoid;border:1px solid #ccc}
+  details{border:0;padding:0}
+  details>*{display:block}
+}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="hbtns"><button id="printBtn">🖨 Print</button><button id="themeBtn">◐ Theme</button></div>
+  <div class="wrap" style="padding-bottom:0">
+    <span class="tag lock">🔒 Teacher only</span><span class="tag">IGCSE 0478 · Paper 2</span><span class="tag">60 min</span><span class="tag">Core 1 · Week 9</span>
+    <h1>Teacher Guide: Standard Methods</h1>
+    <p>Totalling · Counting · Maximum · Minimum · Average — activity-based lesson with runnable pseudocode.</p>
+  </div>
+</header>
+
+<div class="timerbar"><div class="wrap">
+  <span class="clock" id="clock">60:00</span>
+  <div style="flex:1;min-width:200px">
+    <div><span class="phase-now" id="phaseNow">Ready</span> <span class="phase-left" id="phaseLeft"></span></div>
+    <div class="track" id="track" style="margin-top:6px"></div>
+  </div>
+  <button class="btn" id="startBtn">▶ Start</button>
+  <button class="btn ghost" id="resetBtn">↺ Reset</button>
+</div></div>
+
+<main class="wrap">
+
+<!-- OVERVIEW -->
+<section class="card" id="overview">
+  <h2>Lesson overview</h2>
+  <div class="grid3">
+    <div class="box"><h4>Learning objectives</h4><ul>
+      <li>Write totalling, counting, max, min and average algorithms in 0478 pseudocode</li>
+      <li>Trace a standard-method algorithm accurately</li>
+      <li>Identify and fix common initialisation errors</li></ul></div>
+    <div class="box"><h4>Success criteria</h4><ul>
+      <li>I initialise totals/counters to 0 <b>before</b> the loop</li>
+      <li>I initialise Max/Min from <code>List[1]</code></li>
+      <li>I calculate the average <b>after</b> the loop with <code>/</code></li>
+      <li>My code runs and gives the right output</li></ul></div>
+    <div class="box"><h4>Prior knowledge</h4><ul>
+      <li>1D arrays indexed from 1</li><li>FOR…NEXT, IF…THEN…ENDIF</li><li>Assignment with ←</li></ul>
+      <h4 style="margin-top:10px">Keywords</h4>totalling, counting, initialise, iteration, trace table, linear search</div>
+  </div>
+  <h3>Lesson flow at a glance</h3>
+  <div class="scroll"><table>
+    <thead><tr><th>Time</th><th>Phase</th><th>Activity type</th><th>Grouping</th></tr></thead>
+    <tbody id="flowTable"></tbody>
+  </table></div>
+  <h3>Before the lesson</h3>
+  <ul>
+    <li>Share the student page link. Every student needs a device; pairs are fine for Activities A–C.</li>
+    <li>The student page saves code and progress in the browser — remind students to use the same device/browser if they continue at home.</li>
+    <li>The built-in runner understands Cambridge 0478 pseudocode (DECLARE, ←, FOR/NEXT, IF/ELSE/ENDIF, WHILE/ENDWHILE, REPEAT/UNTIL, OUTPUT, DIV, MOD, ROUND). It rejects Python syntax on purpose.</li>
+  </ul>
+</section>
+
+<!-- PHASES -->
+<section class="card phase" id="p1">
+  <div class="sec-head"><div class="num">1</div><h2>Starter: Which method?</h2><span class="time">0–5 min</span></div>
+  <p>Students match six real-world scenarios to a method using drop-downs. Auto-checked.</p>
+  <div class="say">Before you click anything — which word in each sentence tells you the method? "Total value" … "how many" … "coldest"…</div>
+  <h3>Answers</h3>
+  <table><tbody>
+    <tr><td>Total value of all sales</td><td class="ans">Totalling</td></tr>
+    <tr><td>How many scored below 40</td><td class="ans">Counting</td></tr>
+    <tr><td>Coldest temperature</td><td class="ans">Minimum</td></tr>
+    <tr><td>Highest score ever</td><td class="ans">Maximum</td></tr>
+    <tr><td>Mean lap time</td><td class="ans">Average</td></tr>
+    <tr><td>Number of overdue books</td><td class="ans">Counting</td></tr>
+  </tbody></table>
+  <div class="watch">Confusing <b>totalling</b> with <b>counting</b> ("number of overdue books" is a count, not a total). Address it now — it's the trap in Activity B.</div>
+</section>
+
+<section class="card phase" id="p2">
+  <div class="sec-head"><div class="num">2</div><h2>The five patterns (mini-lesson)</h2><span class="time">5–12 min</span></div>
+  <p>Short teacher input using the pattern cards, then students run all three worked examples (tabs). Keep the talk under 4 minutes.</p>
+  <div class="say">Every one of these has three parts: set it up before the loop, update it inside the loop, use it after the loop. If you remember nothing else, remember that.</div>
+  <p><b>Quick-fire questions (cold call):</b></p>
+  <ol class="plan">
+    <li>Why is <code>Max ← 0</code> dangerous? <span class="ans">If all values are negative, Max stays 0.</span></li>
+    <li>What goes wrong if <code>Total ← 0</code> is inside the loop? <span class="ans">It resets every pass; only the last value is kept.</span></li>
+    <li>Why <code>/</code> and not <code>DIV</code> for an average? <span class="ans">DIV drops the decimal part.</span></li>
+  </ol>
+  <p><b>Predict-then-run:</b> students change one array value and predict the output before running. Expected outputs: Totalling <span class="ans">438</span>, Counting <span class="ans">3</span>, Max/Min/Avg <span class="ans">31, 15, 21.6</span>.</p>
+  <div class="watch">Students writing <code>==</code> or Python <code>for score in scores</code>. The runner flags both — use the error message as a teaching moment.</div>
+</section>
+
+<section class="card phase" id="p3">
+  <div class="sec-head"><div class="num">3</div><h2>Activity A: Be the computer (trace table)</h2><span class="time">12–20 min</span></div>
+  <p>Pairs. One student reads each line aloud, the other writes values. Swap roles halfway. Auto-checked cell by cell.</p>
+  <div class="grid2">
+    <div><h3>Completed trace</h3>
+      <table><thead><tr><th>i</th><th>Data[i]</th><th>Total</th><th>Max</th></tr></thead><tbody>
+      <tr><td>—</td><td>—</td><td>0</td><td>7</td></tr>
+      <tr><td>1</td><td>7</td><td>7</td><td>7</td></tr>
+      <tr><td>2</td><td>3</td><td>10</td><td>7</td></tr>
+      <tr><td>3</td><td>12</td><td>22</td><td>12</td></tr>
+      <tr><td>4</td><td>9</td><td>31</td><td>12</td></tr>
+      </tbody></table>
+      <p>OUTPUT: <span class="ans">31</span> then <span class="ans">12</span></p></div>
+    <div><h3>Think–pair–share model answer</h3>
+      <p>If every value is negative (e.g. −4, −9, −2), <code>Max ← 0</code> is never beaten, so the algorithm outputs 0 — a value that isn't even in the list. Starting from <code>Data[1]</code> guarantees Max is always a real element.</p>
+      <p class="phase-left">Note: on Paper 2 trace tables students often only write a value when it changes. The student page asks for the value every row to keep auto-checking simple — mention that both conventions are accepted.</p></div>
+  </div>
+  <div class="diff"><div><b>Support</b>Point to row 3 only: "Is 12 bigger than 7? So what happens to Max?"</div>
+    <div><b>Stretch</b>"Rewrite it so it also tracks Min. What row does Min change in?" (Row 2, Min = 3)</div></div>
+</section>
+
+<section class="card phase" id="p4">
+  <div class="sec-head"><div class="num">4</div><h2>Activity B: Code jigsaw (Parsons problem)</h2><span class="time">20–27 min</span></div>
+  <p>Students build a "count scores ≥ 90" algorithm from shuffled lines, avoiding three traps, then run it.</p>
+  <div class="grid2">
+    <div><h3>Correct solution (output <span class="ans">2</span>)</h3>
+<pre class="code">CountHigh ← 0
+FOR i ← 1 TO 5
+   IF Scores[i] >= 90 THEN
+      CountHigh ← CountHigh + 1
+   ENDIF
+NEXT i
+OUTPUT CountHigh</pre></div>
+    <div><h3>The three traps</h3>
+      <ul>
+        <li><code>CountHigh ← CountHigh + Scores[i]</code> — totalling, not counting</li>
+        <li><code>IF Scores[i] == 90 THEN</code> — Python operator and only matches exactly 90</li>
+        <li><code>CountHigh ← 1</code> — counter must start at 0</li>
+      </ul></div>
+  </div>
+  <div class="say">Before you check — say out loud why each line you left in the bank is wrong.</div>
+  <div class="diff"><div><b>Support</b>Tell them the first and last lines; they place the middle five.</div>
+    <div><b>Stretch</b>"Change it to count scores between 80 and 89 inclusive." (<code>IF Scores[i] >= 80 AND Scores[i] <= 89</code> → 2)</div></div>
+</section>
+
+<section class="card phase" id="p5">
+  <div class="sec-head"><div class="num">5</div><h2>Activity C: Bug hunt</h2><span class="time">27–35 min</span></div>
+  <p>Students click the three faulty lines, then fix the code in the runner. Buggy output is <code>0</code> and <code>-8</code>; fixed output must be <code>-3</code> and <code>-7.25</code>.</p>
+  <div class="scroll"><table>
+    <thead><tr><th>Line</th><th>Bug</th><th>Fix</th><th>Why it matters</th></tr></thead><tbody>
+    <tr><td>9</td><td><code>Max ← 0</code></td><td><code>Max ← Temps[1]</code></td><td>All temps negative → Max stays 0</td></tr>
+    <tr><td>10</td><td><code>Total ← Temps[1]</code></td><td><code>Total ← 0</code></td><td>Loop starts at 1, so Temps[1] is counted twice</td></tr>
+    <tr><td>18</td><td><code>Total DIV 4</code></td><td><code>Total / 4</code></td><td>Integer division loses −0.25</td></tr>
+  </tbody></table></div>
+  <div class="watch">Students who "fix" line 10 by changing the loop to <code>FOR i ← 2 TO 4</code>. That also works — accept it, but ask which is clearer for an examiner.</div>
+  <div class="diff"><div><b>Support</b>Hint: "Run it first. Which output is impossible given the data?"</div>
+    <div><b>Stretch</b>"Would <code>Max ← 0</code> ever be fine? When?" (Only if values are guaranteed non-negative — still poor practice.)</div></div>
+</section>
+
+<section class="card phase" id="p6">
+  <div class="sec-head"><div class="num">6</div><h2>Activity D: Exam challenges</h2><span class="time">35–52 min</span></div>
+  <p>Individual, exam conditions for the first 10 minutes (no talking), then pair checking. Data arrays are pre-loaded so students write only the method. The examiner checklist ticks automatically; the model answer unlocks only after a run.</p>
+  <div class="alert"><b>Correction to source mark scheme:</b> The original lesson file lists "Ch4: 3 from linear search". With Paper 2 arrays starting at 1, <code>Names[4] = "Zoe"</code>, so the correct output is <b>4</b>. The value 3 is the Python (0-based) index. The student page expects 4.</div>
+  <h3>Mark scheme — 16 marks (execute first)</h3>
+  <p class="phase-left">Award no marks for a challenge whose code does not run. Then: 2 marks for correct output, 1 mark for each method point.</p>
+  <div class="scroll"><table>
+    <thead><tr><th>Challenge</th><th>Output</th><th>Method marks (1 each)</th><th>Marks</th></tr></thead><tbody>
+    <tr><td>1 Total without SUM</td><td class="ans">438</td><td>• <code>Total ← 0</code> before loop<br>• <code>Total ← Total + Scores[i]</code> inside loop (no SUM)</td><td>4</td></tr>
+    <tr><td>2 Count A's</td><td class="ans">3</td><td>• Counter starts at 0<br>• <code>IF Grades[i] = "A" THEN</code> increment by 1</td><td>4</td></tr>
+    <tr><td>3 Max & min by scan</td><td class="ans">31<br>15</td><td>• Both initialised from <code>Temps[1]</code>, not 0<br>• Correct <code>&gt;</code> / <code>&lt;</code> comparisons in a loop (one or two scans)</td><td>4</td></tr>
+    <tr><td>4 Linear search</td><td class="ans">4</td><td>• Loop with an index<br>• Stops when found (flag or condition), no one-call find</td><td>4</td></tr>
+    <tr><td>⭐ Stretch</td><td class="ans">21.6<br>3</td><td>Bonus — average after first loop; second loop counts &gt; average</td><td>bonus</td></tr>
+  </tbody></table></div>
+  <h3>Model answers</h3>
+  <details><summary>Challenge 1 — Total (438)</summary>
+<pre class="code">Total ← 0
+FOR i ← 1 TO 5
+   Total ← Total + Scores[i]
+NEXT i
+OUTPUT Total</pre></details>
+  <details><summary>Challenge 2 — Count A's (3)</summary>
+<pre class="code">CountA ← 0
+FOR i ← 1 TO 8
+   IF Grades[i] = "A" THEN
+      CountA ← CountA + 1
+   ENDIF
+NEXT i
+OUTPUT CountA</pre></details>
+  <details><summary>Challenge 3 — Max & min (31, 15)</summary>
+<pre class="code">Highest ← Temps[1]
+Lowest ← Temps[1]
+FOR i ← 2 TO 7
+   IF Temps[i] > Highest THEN
+      Highest ← Temps[i]
+   ENDIF
+   IF Temps[i] < Lowest THEN
+      Lowest ← Temps[i]
+   ENDIF
+NEXT i
+OUTPUT Highest
+OUTPUT Lowest</pre></details>
+  <details><summary>Challenge 4 — Linear search (4)</summary>
+<pre class="code">Index ← 1
+Found ← FALSE
+WHILE Found = FALSE AND Index <= 5 DO
+   IF Names[Index] = "Zoe" THEN
+      Found ← TRUE
+   ELSE
+      Index ← Index + 1
+   ENDIF
+ENDWHILE
+OUTPUT Index</pre>
+  <p class="phase-left">A FOR loop that outputs the index when found also gives 4, but doesn't "stop when found" — award output marks, not the stopping mark.</p></details>
+  <details><summary>⭐ Stretch — Above average (21.6, 3)</summary>
+<pre class="code">Total ← 0
+FOR i ← 1 TO 7
+   Total ← Total + Temps[i]
+NEXT i
+Average ← Total / 7
+Above ← 0
+FOR i ← 1 TO 7
+   IF Temps[i] > Average THEN
+      Above ← Above + 1
+   ENDIF
+NEXT i
+OUTPUT ROUND(Average, 1)
+OUTPUT Above</pre>
+  <p class="phase-left">Two loops are needed because you can't know which values are "above average" until the average exists.</p></details>
+  <div class="diff"><div><b>Support</b>Allow students to keep the Section 2 pattern cards open. Target: Challenges 1–2 fully correct.</div>
+    <div><b>Stretch</b>Stretch task, then: "Rewrite Challenge 4 with REPEAT…UNTIL."</div></div>
+</section>
+
+<section class="card phase" id="p7">
+  <div class="sec-head"><div class="num">7</div><h2>Exit ticket</h2><span class="time">52–58 min</span></div>
+  <p>Five MCQs, individually, auto-marked with instant feedback.</p>
+  <table><thead><tr><th>#</th><th>Question</th><th>Answer</th><th>Tests</th></tr></thead><tbody>
+    <tr><td>1</td><td>Counter starting value</td><td class="ans">0</td><td>Initialisation</td></tr>
+    <tr><td>2</td><td>Safest start for Max</td><td class="ans">List[1]</td><td>Max/min misconception</td></tr>
+    <tr><td>3</td><td>Where to calculate average</td><td class="ans">After the loop</td><td>Average placement</td></tr>
+    <tr><td>4</td><td>Correct increment line</td><td class="ans">Count ← Count + 1</td><td>Counting vs totalling</td></tr>
+    <tr><td>5</td><td>Trace: Total + i*2 for i=1..3</td><td class="ans">12</td><td>Tracing</td></tr>
+  </tbody></table>
+  <div class="say">Hands up if you got 5 … 4 … 3 or fewer. (Fewer than 4 → note names for a recap starter next lesson.)</div>
+</section>
+
+<section class="card phase" id="p8">
+  <div class="sec-head"><div class="num">8</div><h2>Reflect & close</h2><span class="time">58–60 min</span></div>
+  <p>Students rate each method red/amber/green and note one thing that's tricky, then press <b>"Copy my lesson summary"</b> and paste it into your class channel/LMS. The summary contains challenge scores, exit ticket score, confidence ratings and their note.</p>
+  <div class="say">Next week we continue the craft track — your code still has to run. If any method is red for you, rewrite it from memory tonight without looking.</div>
+</section>
+
+<section class="card" id="extra">
+  <h2>Common misconceptions</h2>
+  <div class="scroll"><table>
+    <thead><tr><th>Misconception</th><th>What students write</th><th>Quick fix question</th></tr></thead><tbody>
+    <tr><td>Max/Min start at 0</td><td><code>Max ← 0</code></td><td>"What if all the data is negative?"</td></tr>
+    <tr><td>Reset inside loop</td><td><code>Total ← 0</code> after <code>FOR</code></td><td>"How many times does this line run?"</td></tr>
+    <tr><td>Average inside loop</td><td><code>Avg ← Total / i</code> in loop</td><td>"Do you know the total yet on pass 2?"</td></tr>
+    <tr><td>Integer division</td><td><code>Total DIV Count</code></td><td>"What is 29 DIV 4?"</td></tr>
+    <tr><td>0-based indexing</td><td><code>FOR i ← 0 TO 4</code></td><td>"What's the first index in the DECLARE?"</td></tr>
+    <tr><td>Python syntax</td><td><code>==</code>, <code>for x in list:</code></td><td>"Would the examiner accept this as pseudocode?"</td></tr>
+    <tr><td>Divide by zero</td><td><code>Total / Count</code> with no items</td><td>"What if the array is empty — what should you check first?"</td></tr>
+  </tbody></table></div>
+  <h2 style="margin-top:22px">Homework (15 min)</h2>
+  <p>An array <code>Rain[1:7]</code> holds daily rainfall in mm. Write pseudocode that outputs: the total rainfall, the number of dry days (0 mm), the wettest day's rainfall, and the average rounded to 1 d.p. Test with 0, 12, 4, 0, 7, 21, 0 → <span class="ans">44, 3, 21, 6.3</span>.</p>
+</section>
+</main>
+
+<script>
+const phases=[
+ {id:'p1',name:'Starter: Which method?',m:5,type:'Retrieval / matching',grp:'Individual',c:'#0ea5e9'},
+ {id:'p2',name:'The five patterns',m:7,type:'Direct instruction + predict-run',grp:'Whole class',c:'#6366f1'},
+ {id:'p3',name:'A: Trace table',m:8,type:'Unplugged-style tracing',grp:'Pairs',c:'#8b5cf6'},
+ {id:'p4',name:'B: Code jigsaw',m:7,type:'Parsons problem',grp:'Pairs',c:'#a855f7'},
+ {id:'p5',name:'C: Bug hunt',m:8,type:'Debugging',grp:'Pairs',c:'#ec4899'},
+ {id:'p6',name:'D: Exam challenges',m:17,type:'Exam practice (runnable)',grp:'Individual → pairs',c:'#f97316'},
+ {id:'p7',name:'Exit ticket',m:6,type:'Assessment',grp:'Individual',c:'#22c55e'},
+ {id:'p8',name:'Reflect & close',m:2,type:'Self-assessment',grp:'Individual',c:'#14b8a6'}
+];
+const TOTAL=60*60;
+let starts=[],acc=0;phases.forEach(p=>{starts.push(acc);acc+=p.m*60;});
+const fmt=s=>{s=Math.max(0,Math.round(s));return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');};
+document.getElementById('flowTable').innerHTML=phases.map((p,i)=>`<tr><td>${starts[i]/60}–${(starts[i]+p.m*60)/60} min</td><td><a href="#${p.id}">${p.name}</a></td><td>${p.type}</td><td>${p.grp}</td></tr>`).join('');
+const track=document.getElementById('track');
+track.innerHTML=phases.map((p,i)=>`<div title="${p.name} (${p.m} min)" style="width:${p.m/60*100}%;background:${p.c}" data-i="${i}"></div>`).join('');
+let elapsed=0,running=false,timer=null,last=null;
+try{const s=JSON.parse(localStorage.getItem('sm0478_teacher_timer')||'null');if(s)elapsed=s.e;}catch(e){}
+function save(){try{localStorage.setItem('sm0478_teacher_timer',JSON.stringify({e:elapsed}));}catch(e){}}
+function current(){for(let i=phases.length-1;i>=0;i--) if(elapsed>=starts[i]) return i; return 0;}
+function render(){
+  document.getElementById('clock').textContent=fmt(TOTAL-elapsed);
+  const i=current(),p=phases[i];
+  if(elapsed>=TOTAL){document.getElementById('phaseNow').textContent='Lesson complete';document.getElementById('phaseLeft').textContent='';}
+  else{document.getElementById('phaseNow').textContent=(i+1)+'. '+p.name;
+    document.getElementById('phaseLeft').textContent='· '+fmt(starts[i]+p.m*60-elapsed)+' left in this phase';}
+  [...track.children].forEach((d,k)=>d.className=k<i?'past':k===i&&elapsed>0?'now':'');
+  document.querySelectorAll('section.phase').forEach(s=>s.classList.toggle('now',elapsed>0&&s.id===p.id&&elapsed<TOTAL));
+}
+let lastPhase=-1;
+function tick(){const now=Date.now();elapsed+= (now-last)/1000;last=now;
+  if(elapsed>=TOTAL){elapsed=TOTAL;stop();}
+  const i=current(); if(i!==lastPhase&&running){lastPhase=i;beep();}
+  render();save();}
+function beep(){try{const a=new (window.AudioContext||window.webkitAudioContext)(),o=a.createOscillator(),g=a.createGain();o.connect(g);g.connect(a.destination);o.frequency.value=880;g.gain.value=.08;o.start();o.stop(a.currentTime+.25);}catch(e){}}
+function start(){running=true;last=Date.now();lastPhase=current();timer=setInterval(tick,250);document.getElementById('startBtn').textContent='⏸ Pause';}
+function stop(){running=false;clearInterval(timer);document.getElementById('startBtn').textContent='▶ Start';}
+document.getElementById('startBtn').onclick=()=>running?stop():start();
+document.getElementById('resetBtn').onclick=()=>{stop();elapsed=0;save();render();};
+track.onclick=e=>{const i=e.target.dataset.i;if(i===undefined)return;elapsed=starts[+i];lastPhase=+i;save();render();
+  document.getElementById(phases[+i].id).scrollIntoView({behavior:'smooth',block:'start'});};
+document.getElementById('printBtn').onclick=()=>{document.querySelectorAll('details').forEach(d=>d.open=true);print();};
+document.getElementById('themeBtn').onclick=()=>{const r=document.documentElement,dark=r.dataset.theme?r.dataset.theme==='dark':matchMedia('(prefers-color-scheme: dark)').matches;r.dataset.theme=dark?'light':'dark';};
+render();
+</script>
+</body>
+</html>

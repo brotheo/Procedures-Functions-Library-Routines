@@ -1,0 +1,756 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Standard Methods – Student</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f6f7fb;--card:#ffffff;--ink:#1b1f2a;--muted:#5d6475;--line:#e3e6ee;
+  --brand:#4f46e5;--brand-soft:#eef0ff;--ok:#15803d;--ok-soft:#e8f7ee;--bad:#c2410c;--bad-soft:#fff1e8;
+  --warn:#a16207;--warn-soft:#fff8db;--code-bg:#0f172a;--code-ink:#e2e8f0;--kw:#93c5fd;--chip:#f1f3f8;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0d1017;--card:#161a24;--ink:#e7e9ef;--muted:#9aa2b5;--line:#2a3040;
+  --brand:#8b8cff;--brand-soft:#23264a;--ok:#4ade80;--ok-soft:#12291b;--bad:#fb923c;--bad-soft:#2d1a0e;
+  --warn:#facc15;--warn-soft:#2b2610;--code-bg:#0a0d14;--code-ink:#e2e8f0;--chip:#1f2430;}}
+:root[data-theme="dark"]{
+  --bg:#0d1017;--card:#161a24;--ink:#e7e9ef;--muted:#9aa2b5;--line:#2a3040;
+  --brand:#8b8cff;--brand-soft:#23264a;--ok:#4ade80;--ok-soft:#12291b;--bad:#fb923c;--bad-soft:#2d1a0e;
+  --warn:#facc15;--warn-soft:#2b2610;--code-bg:#0a0d14;--code-ink:#e2e8f0;--chip:#1f2430;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Inter,system-ui,sans-serif}
+.wrap{max-width:1040px;margin:0 auto;padding:0 16px 80px}
+header.hero{background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;padding:28px 16px 22px}
+header.hero .wrap{padding-bottom:0}
+.hero h1{margin:6px 0 4px;font-size:clamp(24px,4vw,34px);letter-spacing:-.02em}
+.hero p{margin:0;opacity:.9}
+.tag{display:inline-block;background:rgba(255,255,255,.18);border-radius:99px;padding:3px 10px;font-size:13px;font-weight:600;margin-right:6px}
+nav.steps{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);margin-bottom:20px}
+nav.steps .wrap{display:flex;gap:6px;overflow-x:auto;padding:10px 16px}
+nav.steps a{flex:none;text-decoration:none;color:var(--muted);background:var(--chip);border-radius:99px;padding:6px 12px;font-size:13px;font-weight:600;white-space:nowrap}
+nav.steps a.done{background:var(--ok-soft);color:var(--ok)}
+nav.steps a.done::before{content:"✓ "}
+section.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px;margin:0 0 22px}
+.sec-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+.sec-head h2{margin:0;font-size:22px;letter-spacing:-.01em}
+.num{background:var(--brand);color:#fff;border-radius:10px;width:32px;height:32px;display:grid;place-items:center;font-weight:800;flex:none}
+.time{margin-left:auto;background:var(--brand-soft);color:var(--brand);font-weight:700;font-size:13px;border-radius:99px;padding:4px 10px}
+.lead{color:var(--muted);margin:4px 0 16px}
+.task{background:var(--brand-soft);border-left:4px solid var(--brand);border-radius:8px;padding:10px 14px;margin:12px 0}
+.task b{color:var(--brand)}
+pre.code,textarea.code{font:14px/1.6 "JetBrains Mono",ui-monospace,monospace;background:var(--code-bg);color:var(--code-ink);border-radius:10px;padding:14px;margin:0;overflow:auto;white-space:pre;tab-size:3}
+textarea.code{width:100%;min-height:260px;border:2px solid transparent;resize:vertical;outline:none}
+textarea.code:focus{border-color:var(--brand)}
+code{font-family:"JetBrains Mono",monospace;background:var(--chip);border-radius:5px;padding:1px 5px;font-size:.92em}
+.btn{font:inherit;font-weight:600;font-size:14px;border:0;border-radius:9px;padding:9px 14px;cursor:pointer;background:var(--brand);color:#fff}
+.btn.ghost{background:var(--chip);color:var(--ink)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:760px){.grid2{grid-template-columns:1fr}}
+.out{font:14px/1.5 "JetBrains Mono",monospace;background:var(--chip);border-radius:10px;padding:12px;min-height:56px;white-space:pre-wrap;margin:0}
+.fb{border-radius:10px;padding:10px 14px;margin:10px 0;font-weight:500;display:none}
+.fb.show{display:block}
+.fb.ok{background:var(--ok-soft);color:var(--ok)}
+.fb.bad{background:var(--bad-soft);color:var(--bad)}
+.fb.warn{background:var(--warn-soft);color:var(--warn)}
+table{border-collapse:collapse;width:100%}
+th,td{border:1px solid var(--line);padding:8px;text-align:left}
+th{background:var(--chip);font-size:13px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+.scroll{overflow-x:auto}
+input.cell{width:100%;min-width:56px;font:15px "JetBrains Mono",monospace;padding:6px;border:1px solid var(--line);border-radius:6px;background:var(--card);color:var(--ink)}
+input.cell.right{background:var(--ok-soft);border-color:var(--ok)}
+input.cell.wrong{background:var(--bad-soft);border-color:var(--bad)}
+select{font:inherit;padding:7px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink)}
+.scen{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:10px 12px;border:1px solid var(--line);border-radius:10px;margin:8px 0}
+.scen.right{border-color:var(--ok);background:var(--ok-soft)}
+.scen.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.methods{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin:12px 0}
+.mcard{border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--card)}
+.mcard h4{margin:0 0 6px}
+.mcard code{display:block;margin:4px 0;background:var(--chip)}
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.rule{background:var(--warn-soft);border-radius:10px;padding:10px 12px;color:var(--ink)}
+.rule b{color:var(--warn)}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0}
+.tabs button{font:inherit;font-size:14px;font-weight:600;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:8px;padding:6px 12px;cursor:pointer}
+.tabs button.on{background:var(--brand);border-color:var(--brand);color:#fff}
+.parsons{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:760px){.parsons{grid-template-columns:1fr}}
+.pbox{border:2px dashed var(--line);border-radius:12px;padding:10px;min-height:240px}
+.pbox h4{margin:0 0 8px;font-size:14px;color:var(--muted)}
+.pline{font:14px "JetBrains Mono",monospace;background:var(--code-bg);color:var(--code-ink);border-radius:8px;padding:8px 10px;margin:6px 0;cursor:pointer;white-space:pre;user-select:none;border:2px solid transparent}
+.pline:hover{border-color:var(--brand)}
+.bugcode{font:14px/1.5 "JetBrains Mono",monospace;background:var(--code-bg);border-radius:10px;padding:8px 0;overflow:auto}
+.bl{display:flex;color:var(--code-ink);cursor:pointer;padding:1px 12px;white-space:pre}
+.bl:hover{background:rgba(255,255,255,.06)}
+.bl .ln{width:28px;color:#64748b;flex:none}
+.bl.sel{background:rgba(250,204,21,.22)}
+.bl.hit{background:rgba(74,222,128,.25)}
+.bl.miss{background:rgba(251,146,60,.28)}
+.bl.missed{outline:2px dashed #4ade80;outline-offset:-2px}
+.chal{border:1px solid var(--line);border-radius:14px;padding:16px;margin:14px 0}
+.chal h3{margin:0 0 4px}
+.badge{font-size:12px;font-weight:700;border-radius:99px;padding:2px 8px;background:var(--chip);color:var(--muted)}
+.checks{list-style:none;padding:0;margin:8px 0 0}
+.checks li{padding:3px 0}
+.checks li::before{content:"○ ";color:var(--muted)}
+.checks li.y::before{content:"✓ ";color:var(--ok);font-weight:800}
+.checks li.n::before{content:"✗ ";color:var(--bad);font-weight:800}
+.model{display:none;margin-top:10px}
+.model.show{display:block}
+.q{border:1px solid var(--line);border-radius:12px;padding:14px;margin:10px 0}
+.q p{margin:0 0 8px;font-weight:600}
+.opt{display:block;padding:8px 10px;border:1px solid var(--line);border-radius:8px;margin:6px 0;cursor:pointer}
+.opt input{margin-right:8px}
+.opt.right{border-color:var(--ok);background:var(--ok-soft)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.tl{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}
+.lights{display:flex;gap:6px}
+.lights button{width:34px;height:34px;border-radius:50%;border:3px solid transparent;cursor:pointer;opacity:.35}
+.lights button.on{opacity:1;border-color:var(--ink)}
+.lights .r{background:#ef4444}.lights .a{background:#f59e0b}.lights .g{background:#22c55e}
+textarea.note{width:100%;min-height:70px;font:inherit;padding:10px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink)}
+.small{font-size:13px;color:var(--muted)}
+.theme-toggle{position:absolute;top:14px;right:16px;background:rgba(255,255,255,.18);color:#fff;border:0;border-radius:99px;padding:6px 12px;font:600 13px Inter,sans-serif;cursor:pointer}
+header.hero{position:relative}
+</style>
+</head>
+<body>
+<header class="hero">
+  <button class="theme-toggle" id="themeBtn" aria-label="Toggle theme">◐ Theme</button>
+  <div class="wrap">
+    <span class="tag">IGCSE 0478 · Paper 2</span><span class="tag">60 minutes</span><span class="tag">Core 1 · Week 9</span>
+    <h1>Standard Methods: Total, Count, Max, Min, Average</h1>
+    <p>Five patterns that turn up in almost every Paper 2 algorithm question. Today you'll trace them, build them, break them and write them — and your code must run.</p>
+  </div>
+</header>
+
+<nav class="steps"><div class="wrap" id="stepNav"></div></nav>
+
+<main class="wrap">
+
+<!-- 1 STARTER -->
+<section class="card" id="s1" data-title="Starter">
+  <div class="sec-head"><div class="num">1</div><h2>Starter: Which method?</h2><span class="time">5 min</span></div>
+  <p class="lead">Each situation needs one standard method. Pick the right one for each, then check.</p>
+  <div id="scenarios"></div>
+  <div class="row"><button class="btn" id="scenCheck">Check answers</button></div>
+  <div class="fb" id="scenFb"></div>
+</section>
+
+<!-- 2 LEARN -->
+<section class="card" id="s2" data-title="Learn">
+  <div class="sec-head"><div class="num">2</div><h2>The five patterns</h2><span class="time">7 min</span></div>
+  <p class="lead">Every method has the same shape: <b>initialise before the loop → update inside the loop → use the result after the loop.</b></p>
+  <div class="methods">
+    <div class="mcard"><h4>➕ Totalling</h4><code>Total ← 0</code><code>Total ← Total + Item</code></div>
+    <div class="mcard"><h4>🔢 Counting</h4><code>Count ← 0</code><code>IF cond THEN</code><code>  Count ← Count + 1</code></div>
+    <div class="mcard"><h4>⬆️ Maximum</h4><code>Max ← List[1]</code><code>IF List[i] > Max THEN</code><code>  Max ← List[i]</code></div>
+    <div class="mcard"><h4>⬇️ Minimum</h4><code>Min ← List[1]</code><code>IF List[i] < Min THEN</code><code>  Min ← List[i]</code></div>
+    <div class="mcard"><h4>➗ Average</h4><code>Total ÷ Count</code><span class="small">calculated <b>after</b> the loop</span></div>
+  </div>
+  <div class="rules">
+    <div class="rule"><b>Rule 1:</b> Max/Min start from <code>List[1]</code> — never 0. (What if every value is negative?)</div>
+    <div class="rule"><b>Rule 2:</b> Paper 2 arrays start at index <b>1</b>, and comparisons use <code>=</code> not <code>==</code>.</div>
+    <div class="rule"><b>Rule 3:</b> Use real division <code>/</code> for an average, not <code>DIV</code>.</div>
+  </div>
+  <div class="task"><b>Try it:</b> Run each worked example. Then change one value in the array and predict the new output <i>before</i> you press Run.</div>
+  <div class="tabs" id="exTabs"></div>
+  <div class="runner" id="exRunner"></div>
+</section>
+
+<!-- 3 TRACE -->
+<section class="card" id="s3" data-title="Trace">
+  <div class="sec-head"><div class="num">3</div><h2>Activity A: Be the computer</h2><span class="time">8 min</span></div>
+  <p class="lead">Trace tables are worth easy marks in Paper 2. Work through the code line by line and fill in the value of each variable at the <b>end</b> of every pass of the loop.</p>
+  <div class="grid2">
+    <pre class="code">DECLARE Data : ARRAY[1:4] OF INTEGER
+Data[1] ← 7
+Data[2] ← 3
+Data[3] ← 12
+Data[4] ← 9
+Max ← Data[1]
+Total ← 0
+FOR i ← 1 TO 4
+   Total ← Total + Data[i]
+   IF Data[i] > Max THEN
+      Max ← Data[i]
+   ENDIF
+NEXT i
+OUTPUT Total
+OUTPUT Max</pre>
+    <div>
+      <div class="scroll"><table id="traceTable">
+        <thead><tr><th>i</th><th>Data[i]</th><th>Total</th><th>Max</th></tr></thead>
+        <tbody></tbody>
+      </table></div>
+      <div class="row" style="margin-top:12px"><span><b>OUTPUT:</b></span>
+        <input class="cell" style="width:80px" id="tOut1" placeholder="1st"><input class="cell" style="width:80px" id="tOut2" placeholder="2nd"></div>
+      <div class="row"><button class="btn" id="traceCheck">Check trace</button><button class="btn ghost" id="traceReset">Clear</button></div>
+      <div class="fb" id="traceFb"></div>
+    </div>
+  </div>
+  <div class="task"><b>Think–pair–share:</b> Why does the code start with <code>Max ← Data[1]</code> rather than <code>Max ← 0</code>? Give a data set where <code>Max ← 0</code> gives the wrong answer.</div>
+  <textarea class="note" id="tpsNote" placeholder="Your answer…"></textarea>
+</section>
+
+<!-- 4 PARSONS -->
+<section class="card" id="s4" data-title="Build">
+  <div class="sec-head"><div class="num">4</div><h2>Activity B: Code jigsaw</h2><span class="time">7 min</span></div>
+  <p class="lead">The array <code>Scores</code> holds 85, 92, 78, 95, 88. Build an algorithm that <b>counts how many scores are 90 or more</b> and outputs the count.</p>
+  <div class="task"><b>How:</b> Click a line in the bank to add it to your program. Click a line in your program to send it back. <b>Three lines are traps</b> — leave them in the bank.</div>
+  <div class="parsons">
+    <div class="pbox"><h4>Line bank</h4><div id="pBank"></div></div>
+    <div class="pbox"><h4>Your program</h4><div id="pAns"></div></div>
+  </div>
+  <div class="row"><button class="btn" id="pCheck">Check order</button><button class="btn ghost" id="pRun">Run my program</button><button class="btn ghost" id="pReset">Reset</button></div>
+  <pre class="out" id="pOut">Output appears here</pre>
+  <div class="fb" id="pFb"></div>
+</section>
+
+<!-- 5 BUG HUNT -->
+<section class="card" id="s5" data-title="Debug">
+  <div class="sec-head"><div class="num">5</div><h2>Activity C: Bug hunt</h2><span class="time">8 min</span></div>
+  <p class="lead">This algorithm should output the <b>highest</b> temperature and the <b>average</b> temperature. It runs — but the answers are wrong. There are <b>three</b> bugs.</p>
+  <div class="task"><b>Step 1:</b> Click the three lines you think are wrong, then check. <b>Step 2:</b> Fix the code in the editor below so it outputs <code>-3</code> then <code>-7.25</code>.</div>
+  <div class="bugcode" id="bugCode"></div>
+  <div class="row"><button class="btn" id="bugCheck">Check my 3 lines</button><span class="small" id="bugCount">0 selected</span></div>
+  <div class="fb" id="bugFb"></div>
+  <h3 style="margin-top:18px">Step 2 — fix it</h3>
+  <div class="runner" id="fixRunner"></div>
+</section>
+
+<!-- 6 CHALLENGES -->
+<section class="card" id="s6" data-title="Exam tasks">
+  <div class="sec-head"><div class="num">6</div><h2>Activity D: Exam challenges</h2><span class="time">17 min</span></div>
+  <p class="lead">Write Cambridge 0478 pseudocode. The data is already loaded — you write the method. <b>No mark if your code does not run.</b> The checklist shows what an examiner looks for.</p>
+  <div class="task"><b>Aim:</b> Challenges 1–4 in order (4 marks each). Finished early? Try the ⭐ stretch. The model answer unlocks after you've run your own attempt.</div>
+  <div id="challenges"></div>
+</section>
+
+<!-- 7 EXIT -->
+<section class="card" id="s7" data-title="Exit ticket">
+  <div class="sec-head"><div class="num">7</div><h2>Exit ticket</h2><span class="time">6 min</span></div>
+  <p class="lead">Five quick questions, on your own. Answer them all, then submit.</p>
+  <div id="quiz"></div>
+  <div class="row"><button class="btn" id="quizSubmit">Submit</button></div>
+  <div class="fb" id="quizFb"></div>
+</section>
+
+<!-- 8 REFLECT -->
+<section class="card" id="s8" data-title="Reflect">
+  <div class="sec-head"><div class="num">8</div><h2>Reflect</h2><span class="time">2 min</span></div>
+  <p class="lead">How confident are you writing each method from memory in an exam?</p>
+  <div id="lights"></div>
+  <p style="margin-top:14px"><b>One thing I still find tricky:</b></p>
+  <textarea class="note" id="reflectNote" placeholder="e.g. remembering where the average goes…"></textarea>
+  <div class="row"><button class="btn" id="copySummary">Copy my lesson summary for my teacher</button></div>
+  <div class="fb" id="sumFb"></div>
+  <p class="small">Next week continues the craft track — code must still run.</p>
+</section>
+</main>
+
+<script>
+/* ================= Cambridge 0478 pseudocode interpreter ================= */
+const BUILTINS = {
+  ROUND:(x,n)=>{n=n||0;const f=Math.pow(10,n);return Math.round(x*f)/f;},
+  LENGTH:s=>String(s).length, UCASE:s=>String(s).toUpperCase(), LCASE:s=>String(s).toLowerCase(),
+  SUBSTRING:(s,a,l)=>String(s).substr(a-1,l), INT:x=>Math.trunc(x), RANDOM:()=>Math.random(),
+  DIV:(a,b)=>Math.trunc(a/b), MOD:(a,b)=>a%b
+};
+function transpile(src){
+  const vars=new Set(), body=[], warnings=[];
+  const lines=src.replace(/\r/g,'').split('\n');
+  lines.forEach((raw,n)=>{
+    const strs=[];
+    let line=raw.replace(/"[^"]*"|'[^']*'/g,m=>{strs.push(m);return '§'+(strs.length-1)+'§';});
+    line=line.replace(/\/\/.*$/,'').trim();
+    if(!line) return;
+    const L='Line '+(n+1)+': ';
+    if(/^(for|if|while|def|elif|else)\b.*:\s*$/.test(line) || /^print\s*\(/.test(line))
+      throw new Error(L+'this looks like Python. Write it in 0478 pseudocode (e.g. FOR … NEXT, IF … THEN … ENDIF, OUTPUT).');
+    if(/==/.test(line)) warnings.push(L+'Paper 2 uses = for comparison, not ==.');
+    const restore=s=>s.replace(/§(\d+)§/g,(_,i)=>strs[+i]);
+    const idx=s=>s.replace(/\[([^\[\]]+?),([^\[\]]+?)\]/g,'[$1][$2]');
+    const E=e=>{
+      e=idx(e);
+      e=e.replace(/<>/g,' != ').replace(/([^<>!=])=(?!=)/g,'$1 == ');
+      e=e.replace(/\bAND\b/g,' && ').replace(/\bOR\b/g,' || ').replace(/\bNOT\b/g,' !')
+         .replace(/\bTRUE\b/g,'true').replace(/\bFALSE\b/g,'false');
+      const term='([\\w.]+(?:\\[[^\\]]*\\])*|\\([^()]*\\))';
+      e=e.replace(new RegExp(term+'\\s+DIV\\s+'+term,'g'),'DIV($1,$2)')
+         .replace(new RegExp(term+'\\s+MOD\\s+'+term,'g'),'MOD($1,$2)');
+      return e;
+    };
+    let m, js;
+    if(m=line.match(/^DECLARE\s+(.+?)\s*:\s*(.+)$/i)){
+      const isArr=/^ARRAY/i.test(m[2]); const dims=(m[2].match(/\[(.*?)\]/)||['',''])[1];
+      js=m[1].split(',').map(s=>s.trim()).map(nm=>{vars.add(nm);return nm+(isArr?(dims.includes(',')?'=__arr2();':'={};'):'=undefined;');}).join('');
+    } else if(m=line.match(/^CONSTANT\s+(\w+)\s*(?:←|<-|=)\s*(.+)$/i)){ vars.add(m[1]); js=m[1]+'='+E(m[2])+';'; }
+    else if(m=line.match(/^FOR\s+(\w+)\s*(?:←|<-)\s*(.+?)\s+TO\s+(.+?)(?:\s+STEP\s+(.+))?$/i)){
+      const v=m[1]; vars.add(v); vars.add('__s'+n); vars.add('__e'+n);
+      js=`for(${v}=(${E(m[2])}),__s${n}=(${m[4]?E(m[4]):1}),__e${n}=(${E(m[3])});__s${n}>0?${v}<=__e${n}:${v}>=__e${n};${v}+=__s${n}){__g();`;
+    }
+    else if(/^NEXT\b/i.test(line)) js='}';
+    else if(m=line.match(/^IF\s+(.+?)(?:\s+THEN)?$/i)) js='if('+E(m[1])+'){';
+    else if(/^THEN$/i.test(line)) js='';
+    else if(/^ELSE$/i.test(line)) js='}else{';
+    else if(/^ENDIF$/i.test(line)) js='}';
+    else if(m=line.match(/^WHILE\s+(.+?)(?:\s+DO)?$/i)) js='while('+E(m[1])+'){__g();';
+    else if(/^ENDWHILE$/i.test(line)) js='}';
+    else if(/^REPEAT$/i.test(line)) js='do{__g();';
+    else if(m=line.match(/^UNTIL\s+(.+)$/i)) js='}while(!('+E(m[1])+'));';
+    else if(m=line.match(/^(?:OUTPUT|PRINT)\s+(.+)$/i)) js='__out('+E(m[1])+');';
+    else if(m=line.match(/^INPUT\s+(.+)$/i)){ const t=idx(m[1].trim()); if(/^\w+$/.test(t)) vars.add(t); js=t+'=__in("'+t+'");'; }
+    else if(m=line.match(/^(.+?)\s*(?:←|<-)\s*(.+)$/)){ const t=idx(m[1].trim()); if(/^\w+$/.test(t)) vars.add(t); js=t+'='+E(m[2])+';'; }
+    else throw new Error(L+'I don\'t understand "'+raw.trim()+'"');
+    body.push(restore(js));
+  });
+  return {code:(vars.size?'var '+[...vars].join(',')+';':'')+body.join('\n'), warnings};
+}
+function runPseudo(src){
+  const out=[]; let t;
+  try{ t=transpile(src); }catch(e){ return {ok:false,out:'',err:e.message,warnings:[]}; }
+  const fmt=v=>v===true?'TRUE':v===false?'FALSE':v===undefined?'(no value)':String(v);
+  const __out=(...a)=>out.push(a.map(fmt).join(''));
+  const __in=name=>{const r=prompt('INPUT '+name); return (r!==null && r.trim()!=='' && !isNaN(r))?Number(r):r;};
+  const __arr2=()=>new Proxy({},{get:(o,k)=>(k in o)?o[k]:(o[k]={})});
+  let c=0; const __g=()=>{ if(++c>200000) throw new Error('Your loop ran more than 200,000 times — check the loop condition.'); };
+  try{
+    const names=Object.keys(BUILTINS);
+    new Function('__out','__in','__arr2','__g',...names,t.code)(__out,__in,__arr2,__g,...names.map(k=>BUILTINS[k]));
+  }catch(e){
+    let msg=e.message;
+    if(e instanceof SyntaxError) msg='Structure error — check every FOR has a NEXT, every IF has an ENDIF, and every WHILE has an ENDWHILE.';
+    else if(e instanceof ReferenceError) msg='A variable is used before it exists: '+e.message.replace(' is not defined','')+' (check spelling and capital letters).';
+    return {ok:false,out:out.join('\n'),err:msg,warnings:t.warnings};
+  }
+  const o=out.join('\n');
+  if(/NaN|\(no value\)/.test(o)) t.warnings.push('A variable was used before it was given a value — did you forget to initialise it (e.g. Total ← 0)?');
+  return {ok:true,out:o,err:null,warnings:t.warnings};
+}
+
+/* ================= Helpers ================= */
+const $=s=>document.querySelector(s);
+const esc=s=>s.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+function fb(el,type,html){el.className='fb show '+type; el.innerHTML=html;}
+const store={get(k,d){try{const v=localStorage.getItem('sm0478_'+k);return v===null?d:JSON.parse(v);}catch(e){return d;}},
+             set(k,v){try{localStorage.setItem('sm0478_'+k,JSON.stringify(v));}catch(e){}}};
+const norm=s=>String(s).trim().split('\n').map(x=>x.trim()).join('\n');
+
+function tabKey(e){
+  if(e.key==='Tab'){e.preventDefault();const t=e.target,s=t.selectionStart;
+    t.value=t.value.slice(0,s)+'   '+t.value.slice(t.selectionEnd);t.selectionStart=t.selectionEnd=s+3;}
+}
+function makeRunner(host,{start,expect,onRun,key}){
+  host.innerHTML=`<textarea class="code" spellcheck="false"></textarea>
+    <div class="row"><button class="btn run">▶ Run</button><button class="btn ghost reset">Reset</button>
+    ${expect!==undefined?`<span class="small">Expected output: <code>${esc(expect).replace(/\n/g,' ↵ ')}</code></span>`:''}</div>
+    <pre class="out">Output appears here</pre><div class="fb"></div>`;
+  const ta=host.querySelector('textarea'), out=host.querySelector('.out'), f=host.querySelector('.fb');
+  ta.value=key?store.get('code_'+key,start):start;
+  ta.addEventListener('keydown',tabKey);
+  ta.addEventListener('input',()=>key&&store.set('code_'+key,ta.value));
+  host.querySelector('.reset').onclick=()=>{ta.value=start;key&&store.set('code_'+key,start);out.textContent='Output appears here';f.className='fb';};
+  host.querySelector('.run').onclick=()=>{
+    const r=runPseudo(ta.value);
+    out.textContent=(r.out||'')+(r.err?'\n⚠ '+r.err:'') || '(no output)';
+    if(!r.out && !r.err) out.textContent='(no output — did you forget OUTPUT?)';
+    const correct=r.ok && expect!==undefined && norm(r.out)===norm(expect);
+    const w=r.warnings.length?'<br>'+r.warnings.map(esc).join('<br>'):'';
+    if(!r.ok) fb(f,'bad','✗ Your code did not run, so it would score 0. '+esc(r.err)+w);
+    else if(expect===undefined) w?fb(f,'warn',w.slice(4)):(f.className='fb');
+    else if(correct) fb(f,'ok','✓ Runs and gives the correct output.'+w);
+    else fb(f,'warn','Runs, but the output doesn\'t match the expected output yet.'+w);
+    onRun&&onRun(r,correct,ta.value);
+  };
+  return {get:()=>ta.value,set:v=>{ta.value=v;}};
+}
+
+/* ================= Progress nav ================= */
+const sections=[...document.querySelectorAll('section.card')];
+const done=store.get('done',{});
+function drawNav(){
+  $('#stepNav').innerHTML=sections.map((s,i)=>`<a href="#${s.id}" class="${done[s.id]?'done':''}">${i+1}. ${s.dataset.title}</a>`).join('');
+}
+function markDone(id){done[id]=true;store.set('done',done);drawNav();}
+drawNav();
+
+/* ================= 1 Starter ================= */
+const scen=[
+  ['A shop wants the total value of all sales today.','Totalling'],
+  ['A teacher wants to know how many students scored below 40.','Counting'],
+  ['A weather station needs the coldest temperature this week.','Minimum'],
+  ['A game shows the highest score ever achieved.','Maximum'],
+  ['A coach wants the typical (mean) lap time of a runner.','Average'],
+  ['A library needs the number of overdue books.','Counting']
+];
+const opts=['—','Totalling','Counting','Maximum','Minimum','Average'];
+$('#scenarios').innerHTML=scen.map((s,i)=>`<div class="scen" id="sc${i}"><span>${s[0]}</span>
+  <select data-i="${i}">${opts.map(o=>`<option>${o}</option>`).join('')}</select></div>`).join('');
+$('#scenCheck').onclick=()=>{
+  let score=0;
+  scen.forEach((s,i)=>{const v=document.querySelector(`#sc${i} select`).value, ok=v===s[1];
+    score+=ok; document.getElementById('sc'+i).className='scen '+(ok?'right':'wrong');});
+  fb($('#scenFb'),score===scen.length?'ok':'warn',`${score}/${scen.length} correct.`+(score<scen.length?' Look at the red ones again — what is the question really asking for: a sum, a how-many, the biggest, the smallest or a mean?':' Nice — now let\'s see how each one is coded.'));
+  if(score===scen.length) markDone('s1');
+};
+
+/* ================= 2 Worked examples ================= */
+const examples={
+'Totalling':`DECLARE Scores : ARRAY[1:5] OF INTEGER
+DECLARE Total : INTEGER
+DECLARE i : INTEGER
+Scores[1] ← 85
+Scores[2] ← 92
+Scores[3] ← 78
+Scores[4] ← 95
+Scores[5] ← 88
+Total ← 0
+FOR i ← 1 TO 5
+   Total ← Total + Scores[i]
+NEXT i
+OUTPUT Total`,
+'Counting':`DECLARE Grades : ARRAY[1:8] OF STRING
+DECLARE CountA : INTEGER
+DECLARE i : INTEGER
+Grades[1] ← "A"
+Grades[2] ← "B"
+Grades[3] ← "A"
+Grades[4] ← "C"
+Grades[5] ← "B"
+Grades[6] ← "A"
+Grades[7] ← "D"
+Grades[8] ← "B"
+CountA ← 0
+FOR i ← 1 TO 8
+   IF Grades[i] = "A" THEN
+      CountA ← CountA + 1
+   ENDIF
+NEXT i
+OUTPUT CountA`,
+'Max, Min & Average':`DECLARE Numbers : ARRAY[1:7] OF INTEGER
+DECLARE Max : INTEGER
+DECLARE Min : INTEGER
+DECLARE Total : REAL
+DECLARE i : INTEGER
+Numbers[1] ← 18
+Numbers[2] ← 22
+Numbers[3] ← 15
+Numbers[4] ← 28
+Numbers[5] ← 20
+Numbers[6] ← 31
+Numbers[7] ← 17
+Max ← Numbers[1]
+Min ← Numbers[1]
+Total ← 0
+FOR i ← 1 TO 7
+   IF Numbers[i] > Max THEN
+      Max ← Numbers[i]
+   ENDIF
+   IF Numbers[i] < Min THEN
+      Min ← Numbers[i]
+   ENDIF
+   Total ← Total + Numbers[i]
+NEXT i
+OUTPUT Max
+OUTPUT Min
+OUTPUT ROUND(Total / 7, 1)`
+};
+const exRun=new Set();
+function showEx(name){
+  document.querySelectorAll('#exTabs button').forEach(b=>b.classList.toggle('on',b.textContent===name));
+  makeRunner($('#exRunner'),{start:examples[name],onRun:r=>{if(r.ok){exRun.add(name); if(exRun.size===3) markDone('s2');}}});
+}
+$('#exTabs').innerHTML=Object.keys(examples).map(k=>`<button>${k}</button>`).join('');
+document.querySelectorAll('#exTabs button').forEach(b=>b.onclick=()=>showEx(b.textContent));
+showEx('Totalling');
+
+/* ================= 3 Trace table ================= */
+const traceAns=[['','','0','7'],['1','7','7','7'],['2','3','10','7'],['3','12','22','12'],['4','9','31','12']];
+$('#traceTable tbody').innerHTML=traceAns.map((r,ri)=>'<tr>'+r.map((v,ci)=>
+  ri===0?`<td>${ci===0?'<span class="small">before loop</span>':v}</td>`:`<td><input class="cell" data-r="${ri}" data-c="${ci}"></td>`).join('')+'</tr>').join('');
+$('#traceCheck').onclick=()=>{
+  let right=0,total=0;
+  document.querySelectorAll('#traceTable input').forEach(inp=>{total++;const ok=inp.value.trim()===traceAns[inp.dataset.r][inp.dataset.c];right+=ok;inp.className='cell '+(ok?'right':'wrong');});
+  const o1=$('#tOut1'),o2=$('#tOut2');[[o1,'31'],[o2,'12']].forEach(([el,v])=>{total++;const ok=el.value.trim()===v;right+=ok;el.className='cell '+(ok?'right':'wrong');});
+  if(right===total){fb($('#traceFb'),'ok','✓ Perfect trace. Notice Max only changed when a <i>bigger</i> value appeared (row 3).');markDone('s3');}
+  else fb($('#traceFb'),'warn',`${right}/${total} cells correct. Tip: Total adds every value; Max keeps its old value unless Data[i] is bigger.`);
+};
+$('#traceReset').onclick=()=>{document.querySelectorAll('#traceTable input,#tOut1,#tOut2').forEach(i=>{i.value='';i.className='cell';});$('#traceFb').className='fb';};
+$('#tpsNote').value=store.get('tps','');$('#tpsNote').oninput=e=>store.set('tps',e.target.value);
+
+/* ================= 4 Parsons ================= */
+const pSetup=`DECLARE Scores : ARRAY[1:5] OF INTEGER
+DECLARE CountHigh : INTEGER
+DECLARE i : INTEGER
+Scores[1] ← 85
+Scores[2] ← 92
+Scores[3] ← 78
+Scores[4] ← 95
+Scores[5] ← 88
+`;
+const pLines=[
+  {id:0,t:'CountHigh ← 0',ind:0},{id:1,t:'FOR i ← 1 TO 5',ind:0},{id:2,t:'IF Scores[i] >= 90 THEN',ind:1},
+  {id:3,t:'CountHigh ← CountHigh + 1',ind:2},{id:4,t:'ENDIF',ind:1},{id:5,t:'NEXT i',ind:0},{id:6,t:'OUTPUT CountHigh',ind:0},
+  {id:7,t:'CountHigh ← CountHigh + Scores[i]',ind:2,trap:'adds the score itself — that\'s totalling, not counting'},
+  {id:8,t:'IF Scores[i] == 90 THEN',ind:1,trap:'uses Python == and only matches exactly 90'},
+  {id:9,t:'CountHigh ← 1',ind:0,trap:'a counter must start at 0'}
+];
+let bank,ans;
+function pInit(){bank=[...pLines].sort(()=>Math.random()-.5).map(l=>l.id);ans=[];pDraw();$('#pFb').className='fb';$('#pOut').textContent='Output appears here';}
+function pDraw(){
+  const line=(id,inAns)=>{const l=pLines[id];return `<div class="pline" data-id="${id}" data-a="${inAns?1:0}">${inAns?'   '.repeat(l.ind):''}${esc(l.t)}</div>`;};
+  $('#pBank').innerHTML=bank.map(id=>line(id,false)).join('')||'<span class="small">Empty</span>';
+  $('#pAns').innerHTML=ans.map(id=>line(id,true)).join('')||'<span class="small">Click lines in the bank to add them here, in order.</span>';
+  document.querySelectorAll('.pline').forEach(el=>el.onclick=()=>{const id=+el.dataset.id;
+    if(el.dataset.a==='1'){ans=ans.filter(x=>x!==id);bank.push(id);}else{bank=bank.filter(x=>x!==id);ans.push(id);} pDraw();});
+}
+const pProgram=()=>ans.map(id=>'   '.repeat(pLines[id].ind)+pLines[id].t).join('\n');
+$('#pCheck').onclick=()=>{
+  const traps=ans.filter(id=>pLines[id].trap);
+  if(traps.length) return fb($('#pFb'),'bad','Trap line in your program: <code>'+esc(pLines[traps[0]].t)+'</code> — it '+pLines[traps[0]].trap+'.');
+  if(ans.join()==='0,1,2,3,4,5,6'){fb($('#pFb'),'ok','✓ Correct! Initialise → loop → condition → +1 → output after the loop. Press Run to prove it outputs 2.');markDone('s4');}
+  else if(ans.length<7) fb($('#pFb'),'warn','Not finished — you need 7 lines.');
+  else fb($('#pFb'),'warn','All the right lines, wrong order. Where must the counter be set to 0 — inside or before the loop? Where does OUTPUT go?');
+};
+$('#pRun').onclick=()=>{const r=runPseudo(pSetup+pProgram());$('#pOut').textContent=(r.out||'(no output)')+(r.err?'\n⚠ '+r.err:'');};
+$('#pReset').onclick=pInit;pInit();
+
+/* ================= 5 Bug hunt ================= */
+const bugSrc=`DECLARE Temps : ARRAY[1:4] OF INTEGER
+DECLARE Max : INTEGER
+DECLARE Total : INTEGER
+DECLARE i : INTEGER
+Temps[1] ← -5
+Temps[2] ← -12
+Temps[3] ← -3
+Temps[4] ← -9
+Max ← 0
+Total ← Temps[1]
+FOR i ← 1 TO 4
+   IF Temps[i] > Max THEN
+      Max ← Temps[i]
+   ENDIF
+   Total ← Total + Temps[i]
+NEXT i
+OUTPUT Max
+OUTPUT Total DIV 4`;
+const bugLines=[9,10,18], bugWhy={9:'Max ← 0 — every temperature is negative, so none is ever bigger than 0. Use Max ← Temps[1].',
+  10:'Total ← Temps[1] — the loop starts at 1, so Temps[1] is added twice. Use Total ← 0.',18:'DIV is integer division, so −7.25 loses its decimal part. Use Total / 4.'};
+const sel=new Set();
+$('#bugCode').innerHTML=bugSrc.split('\n').map((l,i)=>`<div class="bl" data-n="${i+1}"><span class="ln">${i+1}</span>${esc(l)}</div>`).join('');
+document.querySelectorAll('.bl').forEach(el=>el.onclick=()=>{const n=+el.dataset.n;sel.has(n)?sel.delete(n):sel.add(n);
+  el.className='bl'+(sel.has(n)?' sel':'');$('#bugCount').textContent=sel.size+' selected';});
+$('#bugCheck').onclick=()=>{
+  if(sel.size!==3) return fb($('#bugFb'),'warn','Select exactly three lines.');
+  let hits=0;
+  document.querySelectorAll('.bl').forEach(el=>{const n=+el.dataset.n,isBug=bugLines.includes(n);
+    el.className='bl'+(sel.has(n)?(isBug?' hit':' miss'):(isBug?' missed':''));if(sel.has(n)&&isBug)hits++;});
+  fb($('#bugFb'),hits===3?'ok':'warn',`${hits}/3 bugs found. `+(hits===3?'<br>'+bugLines.map(n=>'Line '+n+': '+esc(bugWhy[n])).join('<br>'):'Green dashed outlines show bugs you missed. Run the buggy code in Step 2 to see the wrong output, then think about all-negative data.'));
+};
+makeRunner($('#fixRunner'),{start:bugSrc,expect:'-3\n-7.25',key:'fix',onRun:(r,ok)=>ok&&markDone('s5')});
+
+/* ================= 6 Challenges ================= */
+const C=[
+ {t:'Total without SUM',marks:4,brief:'Scores hold 85, 92, 78, 95, 88. Use a running total in a loop and OUTPUT the total. Do not use a library sum.',
+  start:`DECLARE Scores : ARRAY[1:5] OF INTEGER
+DECLARE Total : INTEGER
+DECLARE i : INTEGER
+Scores[1] ← 85
+Scores[2] ← 92
+Scores[3] ← 78
+Scores[4] ← 95
+Scores[5] ← 88
+// Your code below
+`,expect:'438',
+  checks:[['Total initialised to 0 before the loop',c=>/Total\s*(←|<-)\s*0\s*$/m.test(c)],
+          ['Each value added inside a loop',c=>/(FOR|WHILE|REPEAT)/i.test(c)&&/Total\s*(←|<-)\s*Total\s*\+/.test(c)],
+          ['No one-call total (no SUM)',c=>!/\bSUM\s*\(/i.test(c)]],
+  model:`Total ← 0
+FOR i ← 1 TO 5
+   Total ← Total + Scores[i]
+NEXT i
+OUTPUT Total`},
+ {t:'Count the A grades',marks:4,brief:'Grades hold A, B, A, C, B, A, D, B. Count how many are "A" and OUTPUT the count. Use a loop with a counter.',
+  start:`DECLARE Grades : ARRAY[1:8] OF STRING
+DECLARE CountA : INTEGER
+DECLARE i : INTEGER
+Grades[1] ← "A"
+Grades[2] ← "B"
+Grades[3] ← "A"
+Grades[4] ← "C"
+Grades[5] ← "B"
+Grades[6] ← "A"
+Grades[7] ← "D"
+Grades[8] ← "B"
+// Your code below
+`,expect:'3',
+  checks:[['Counter starts at 0',c=>/\w+\s*(←|<-)\s*0\s*$/m.test(c)],
+          ['IF Grades[i] = "A" THEN (using =, not ==)',c=>/IF\s+.*=\s*"A"/i.test(c)&&!/==/.test(c)],
+          ['Counter increases by 1',c=>/(\w+)\s*(←|<-)\s*\1\s*\+\s*1\b/.test(c)]],
+  model:`CountA ← 0
+FOR i ← 1 TO 8
+   IF Grades[i] = "A" THEN
+      CountA ← CountA + 1
+   ENDIF
+NEXT i
+OUTPUT CountA`},
+ {t:'Max and min by scanning',marks:4,brief:'Temps hold 18, 22, 15, 28, 20, 31, 17. OUTPUT the highest, then the lowest. Initialise from Temps[1] and scan with a loop — no built-in MAX/MIN.',
+  start:`DECLARE Temps : ARRAY[1:7] OF INTEGER
+DECLARE Highest : INTEGER
+DECLARE Lowest : INTEGER
+DECLARE i : INTEGER
+Temps[1] ← 18
+Temps[2] ← 22
+Temps[3] ← 15
+Temps[4] ← 28
+Temps[5] ← 20
+Temps[6] ← 31
+Temps[7] ← 17
+// Your code below
+`,expect:'31\n15',
+  checks:[['Highest and Lowest start from Temps[1], not 0',c=>(c.match(/(←|<-)\s*Temps\[1\]\s*$/gm)||[]).length>=2],
+          ['Comparisons > and < inside a loop',c=>/(FOR|WHILE|REPEAT)/i.test(c)&&/>/.test(c)&&/</.test(c.replace(/<-|<>/g,''))],
+          ['No built-in MAX/MIN',c=>!/\b(MAX|MIN)\s*\(/i.test(c)]],
+  model:`Highest ← Temps[1]
+Lowest ← Temps[1]
+FOR i ← 2 TO 7
+   IF Temps[i] > Highest THEN
+      Highest ← Temps[i]
+   ENDIF
+   IF Temps[i] < Lowest THEN
+      Lowest ← Temps[i]
+   ENDIF
+NEXT i
+OUTPUT Highest
+OUTPUT Lowest`},
+ {t:'Linear search: find Zoe',marks:4,brief:'Names hold Ali, Eve, Sam, Zoe, Max. OUTPUT the index where "Zoe" is stored (arrays start at 1). Scan one by one and stop when found.',
+  start:`DECLARE Names : ARRAY[1:5] OF STRING
+DECLARE Index : INTEGER
+DECLARE Found : BOOLEAN
+Names[1] ← "Ali"
+Names[2] ← "Eve"
+Names[3] ← "Sam"
+Names[4] ← "Zoe"
+Names[5] ← "Max"
+// Your code below
+`,expect:'4',
+  checks:[['Loop with an index variable',c=>/(FOR|WHILE|REPEAT)/i.test(c)&&/Names\[\s*\w+\s*\]/.test(c.split('// Your code below')[1]||'')],
+          ['Stops when found (WHILE/REPEAT with a flag or condition)',c=>/(WHILE|UNTIL)\s+.*(Found|"Zoe"|=)/i.test(c)],
+          ['No one-call find',c=>!/\b(FIND|INDEX|INDEXOF)\s*\(/i.test(c)]],
+  model:`Index ← 1
+Found ← FALSE
+WHILE Found = FALSE AND Index <= 5 DO
+   IF Names[Index] = "Zoe" THEN
+      Found ← TRUE
+   ELSE
+      Index ← Index + 1
+   ENDIF
+ENDWHILE
+OUTPUT Index`},
+ {t:'⭐ Stretch: above average',marks:0,brief:'Using the same Temps as Challenge 3: OUTPUT the average rounded to 1 decimal place, then OUTPUT how many temperatures are above the average. (Hint: you need two loops — why?)',
+  start:`DECLARE Temps : ARRAY[1:7] OF INTEGER
+DECLARE Total : INTEGER
+DECLARE Average : REAL
+DECLARE Above : INTEGER
+DECLARE i : INTEGER
+Temps[1] ← 18
+Temps[2] ← 22
+Temps[3] ← 15
+Temps[4] ← 28
+Temps[5] ← 20
+Temps[6] ← 31
+Temps[7] ← 17
+// Your code below
+`,expect:'21.6\n3',
+  checks:[['Average calculated after the first loop',c=>/Average\s*(←|<-)\s*Total\s*\/\s*7/.test(c)],
+          ['Second loop counts values > Average',c=>(c.match(/\bFOR\b/gi)||[]).length>=2&&/>\s*Average/.test(c)],
+          ['Uses ROUND(…, 1) for the output',c=>/ROUND\s*\(/i.test(c)]],
+  model:`Total ← 0
+FOR i ← 1 TO 7
+   Total ← Total + Temps[i]
+NEXT i
+Average ← Total / 7
+Above ← 0
+FOR i ← 1 TO 7
+   IF Temps[i] > Average THEN
+      Above ← Above + 1
+   ENDIF
+NEXT i
+OUTPUT ROUND(Average, 1)
+OUTPUT Above`}
+];
+$('#challenges').innerHTML=C.map((c,i)=>`<div class="chal" id="ch${i}">
+  <div class="row" style="margin:0"><h3>${i<4?'Challenge '+(i+1)+': ':''}${c.t}</h3>${c.marks?`<span class="badge">${c.marks} marks</span>`:'<span class="badge">bonus</span>'}</div>
+  <p style="margin:6px 0 10px">${c.brief}</p>
+  <div class="runner"></div>
+  <b>Examiner checklist</b>
+  <ul class="checks"><li data-k="run">Runs and gives the correct output (no mark if it does not run)</li>${c.checks.map((k,j)=>`<li data-k="${j}">${k[0]}</li>`).join('')}</ul>
+  <div class="row"><button class="btn ghost showModel" disabled>Show model answer</button></div>
+  <div class="model"><pre class="code">${esc(c.model)}</pre></div></div>`).join('');
+const chalDone=store.get('chal',{});
+C.forEach((c,i)=>{
+  const box=document.getElementById('ch'+i), btn=box.querySelector('.showModel');
+  makeRunner(box.querySelector('.runner'),{start:c.start,expect:c.expect,key:'ch'+i,onRun:(r,ok,code)=>{
+    btn.disabled=false;
+    box.querySelector('[data-k="run"]').className=ok?'y':'n';
+    let met=ok?1:0;
+    c.checks.forEach((k,j)=>{const y=k[1](code);met+=y;box.querySelector(`[data-k="${j}"]`).className=y?'y':'n';});
+    chalDone[i]=Math.max(chalDone[i]||0,ok?met:0);store.set('chal',chalDone);
+    if([0,1,2,3].every(k=>chalDone[k]>=4)) markDone('s6');
+  }});
+  btn.onclick=()=>box.querySelector('.model').classList.toggle('show');
+});
+
+/* ================= 7 Exit quiz ================= */
+const Q=[
+ ['Before a counting loop, the counter should be set to…',['0','1','the first element of the array','nothing — it starts automatically'],0],
+ ['The safest starting value for Max is…',['0','-1','List[1]','999'],2],
+ ['Where should an average be calculated?',['Inside the loop, each pass','After the loop','Before the loop','Inside the IF statement'],1],
+ ['Which line correctly increments a counter?',['Count ← Count + List[i]','Count + 1 ← Count','Count ← Count + 1','Count == Count + 1'],2],
+ ['What is output?<pre class="code" style="margin-top:8px">Total ← 0\nFOR i ← 1 TO 3\n   Total ← Total + i * 2\nNEXT i\nOUTPUT Total</pre>',['6','8','12','3'],2]
+];
+$('#quiz').innerHTML=Q.map((q,i)=>`<div class="q"><p>${i+1}. ${q[0]}</p>${q[1].map((o,j)=>`<label class="opt"><input type="radio" name="q${i}" value="${j}">${esc(o)}</label>`).join('')}</div>`).join('');
+$('#quizSubmit').onclick=()=>{
+  let s=0,ans=0;
+  Q.forEach((q,i)=>{const c=document.querySelector(`input[name=q${i}]:checked`);if(c)ans++;
+    document.querySelectorAll(`input[name=q${i}]`).forEach(r=>{const l=r.parentElement;l.className='opt'+(+r.value===q[2]?' right':(r.checked?' wrong':''));});
+    if(c&&+c.value===q[2])s++;});
+  if(ans<Q.length) return fb($('#quizFb'),'warn','Answer all five first.');
+  store.set('quiz',s);
+  fb($('#quizFb'),s>=4?'ok':'warn',`You scored ${s}/5. `+(s===5?'Excellent.':s>=4?'Good — check the one you missed.':'Revisit the pattern cards in section 2 tonight.'));
+  markDone('s7');
+};
+
+/* ================= 8 Reflect ================= */
+const conf=store.get('conf',{});
+const meths=['Totalling','Counting','Maximum','Minimum','Average'];
+$('#lights').innerHTML=meths.map(m=>`<div class="tl"><span>${m}</span><div class="lights" data-m="${m}">
+ <button class="r" data-v="red" aria-label="Not yet"></button><button class="a" data-v="amber" aria-label="Getting there"></button><button class="g" data-v="green" aria-label="Confident"></button></div></div>`).join('')
+ +'<p class="small">🔴 not yet · 🟠 getting there · 🟢 confident</p>';
+function drawLights(){document.querySelectorAll('.lights').forEach(g=>g.querySelectorAll('button').forEach(b=>b.classList.toggle('on',conf[g.dataset.m]===b.dataset.v)));}
+document.querySelectorAll('.lights button').forEach(b=>b.onclick=()=>{conf[b.parentElement.dataset.m]=b.dataset.v;store.set('conf',conf);drawLights();
+  if(Object.keys(conf).length===5) markDone('s8');});
+drawLights();
+$('#reflectNote').value=store.get('reflect','');$('#reflectNote').oninput=e=>store.set('reflect',e.target.value);
+$('#copySummary').onclick=()=>{
+  const ch=[0,1,2,3].map(i=>`C${i+1}: ${chalDone[i]||0}/4`).join(', ');
+  const txt=`Standard Methods (0478) – lesson summary
+Challenges: ${ch}${chalDone[4]?' | Stretch: '+chalDone[4]+'/4':''}
+Exit ticket: ${store.get('quiz','not done')}/5
+Confidence: ${meths.map(m=>m+'='+(conf[m]||'-')).join(', ')}
+Still tricky: ${$('#reflectNote').value||'-'}`;
+  const ok=()=>fb($('#sumFb'),'ok','Copied — paste it where your teacher asks.');
+  (navigator.clipboard?navigator.clipboard.writeText(txt).then(ok):Promise.reject()).catch(()=>fb($('#sumFb'),'warn','<pre style="white-space:pre-wrap;margin:0">'+esc(txt)+'</pre>'));
+};
+
+/* ================= Theme ================= */
+$('#themeBtn').onclick=()=>{const r=document.documentElement,dark=r.dataset.theme?r.dataset.theme==='dark':matchMedia('(prefers-color-scheme: dark)').matches;r.dataset.theme=dark?'light':'dark';};
+</script>
+</body>
+</html>
