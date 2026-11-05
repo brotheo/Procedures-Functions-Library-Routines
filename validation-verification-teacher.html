@@ -1,0 +1,491 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Validation &amp; Verification – Teacher</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f6f7fb;--card:#fff;--ink:#1b1f2a;--muted:#5d6475;--line:#e3e6ee;--brand:#0f766e;--brand-soft:#e6f5f3;
+  --ok:#15803d;--ok-soft:#e8f7ee;--bad:#c2410c;--bad-soft:#fff1e8;--warn:#a16207;--warn-soft:#fff8db;--code-bg:#0f172a;--code-ink:#e2e8f0;--chip:#f1f3f8;}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0d1017;--card:#161a24;--ink:#e7e9ef;--muted:#9aa2b5;--line:#2a3040;--brand:#2dd4bf;--brand-soft:#11302c;
+  --ok:#4ade80;--ok-soft:#12291b;--bad:#fb923c;--bad-soft:#2d1a0e;--warn:#facc15;--warn-soft:#2b2610;--code-bg:#0a0d14;--chip:#1f2430;}}
+:root[data-theme="dark"]{
+  --bg:#0d1017;--card:#161a24;--ink:#e7e9ef;--muted:#9aa2b5;--line:#2a3040;--brand:#2dd4bf;--brand-soft:#11302c;
+  --ok:#4ade80;--ok-soft:#12291b;--bad:#fb923c;--bad-soft:#2d1a0e;--warn:#facc15;--warn-soft:#2b2610;--code-bg:#0a0d14;--chip:#1f2430;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15.5px/1.55 Inter,system-ui,sans-serif}
+.wrap{max-width:1060px;margin:0 auto;padding:0 16px 80px}
+header.hero{background:linear-gradient(135deg,#0f766e,#155e75);color:#fff;padding:26px 16px 20px;position:relative}
+.hero h1{margin:6px 0 4px;font-size:clamp(22px,4vw,32px);letter-spacing:-.02em}
+.hero p{margin:0;opacity:.9}
+.tag{display:inline-block;background:rgba(255,255,255,.18);border-radius:99px;padding:3px 10px;font-size:13px;font-weight:600;margin-right:6px}
+.lock{background:#fde68a;color:#713f12}
+.hbtns{position:absolute;top:14px;right:16px;display:flex;gap:6px}
+.hbtns button{background:rgba(255,255,255,.18);color:#fff;border:0;border-radius:99px;padding:6px 12px;font:600 13px Inter,sans-serif;cursor:pointer}
+.timerbar{position:sticky;top:0;z-index:5;background:var(--card);border-bottom:1px solid var(--line);box-shadow:0 2px 10px rgba(0,0,0,.04)}
+.timerbar .wrap{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:10px 16px}
+.clock{font:700 26px "JetBrains Mono",monospace;min-width:92px}
+.phase-now{font-weight:700}
+.phase-left{color:var(--muted);font-size:13px}
+.btn{font:inherit;font-weight:600;font-size:14px;border:0;border-radius:9px;padding:8px 13px;cursor:pointer;background:var(--brand);color:#fff}
+.btn.ghost{background:var(--chip);color:var(--ink)}
+.track{display:flex;width:100%;height:10px;border-radius:99px;overflow:hidden;background:var(--chip)}
+.track div{height:100%;border-right:2px solid var(--card);cursor:pointer;opacity:.35}
+.track div.past{opacity:.7}.track div.now{opacity:1}
+section.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px;margin:20px 0}
+section.card.now{border:2px solid var(--brand);box-shadow:0 0 0 4px var(--brand-soft)}
+h2{margin:0 0 10px;font-size:21px;letter-spacing:-.01em}
+h3{margin:18px 0 6px;font-size:16px}
+.sec-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+.sec-head h2{margin:0}
+.num{background:var(--brand);color:#fff;border-radius:10px;width:32px;height:32px;display:grid;place-items:center;font-weight:800;flex:none}
+.time{margin-left:auto;background:var(--brand-soft);color:var(--brand);font-weight:700;font-size:13px;border-radius:99px;padding:4px 10px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid2>*,.grid3>*{min-width:0}
+.grid2 table{display:block;overflow-x:auto}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media (max-width:780px){.grid2,.grid3{grid-template-columns:1fr}}
+.box{border-radius:12px;padding:12px 14px;background:var(--chip)}
+.box h4{margin:0 0 6px;font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.box ul{margin:0;padding-left:18px}
+.say{background:var(--brand-soft);border-left:4px solid var(--brand);border-radius:8px;padding:10px 14px;margin:10px 0}
+.say::before{content:"💬 Say: ";font-weight:700;color:var(--brand)}
+.watch{background:var(--warn-soft);border-left:4px solid var(--warn);border-radius:8px;padding:10px 14px;margin:10px 0}
+.watch::before{content:"👀 Watch for: ";font-weight:700;color:var(--warn)}
+.diff{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+@media (max-width:780px){.diff{grid-template-columns:1fr}}
+.diff div{border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.diff b{display:block;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+pre.code{font:13.5px/1.6 "JetBrains Mono",monospace;background:var(--code-bg);color:var(--code-ink);border-radius:10px;padding:12px 14px;margin:6px 0;overflow:auto;white-space:pre}
+code{font-family:"JetBrains Mono",monospace;background:var(--chip);border-radius:5px;padding:1px 5px;font-size:.92em}
+table{border-collapse:collapse;width:100%}
+th,td{border:1px solid var(--line);padding:8px;text-align:left;vertical-align:top}
+th{background:var(--chip);font-size:12.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+.scroll{overflow-x:auto}
+details{border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin:8px 0}
+details summary{cursor:pointer;font-weight:600}
+.alert{background:var(--bad-soft);border:1px solid var(--bad);color:var(--ink);border-radius:10px;padding:12px 14px;margin:12px 0}
+.alert b{color:var(--bad)}
+.alert ul{margin:6px 0 0;padding-left:18px}
+.ans{color:var(--ok);font-weight:700}
+@media print{
+  .timerbar,.hbtns{display:none}
+  body{background:#fff;color:#000}
+  section.card{break-inside:avoid;border:1px solid #ccc}
+  details{border:0;padding:0}
+}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="hbtns"><button id="printBtn">🖨 Print</button><button id="themeBtn">◐ Theme</button></div>
+  <div class="wrap" style="padding-bottom:0">
+    <span class="tag lock">🔒 Teacher only</span><span class="tag">IGCSE 0478 · Paper 1 &amp; 2</span><span class="tag">60 min</span><span class="tag">Core 1 · Week 10</span>
+    <h1>Teacher Guide: Validation, Verification &amp; Tracing</h1>
+    <p>Six validation checks (RLTPFC), three verification methods, check digits, tracing a REPEAT validation loop and runnable 0478 checks.</p>
+  </div>
+</header>
+
+<div class="timerbar"><div class="wrap">
+  <span class="clock" id="clock">60:00</span>
+  <div style="flex:1;min-width:200px">
+    <div><span class="phase-now" id="phaseNow">Ready</span> <span class="phase-left" id="phaseLeft"></span></div>
+    <div class="track" id="track" style="margin-top:6px"></div>
+  </div>
+  <button class="btn" id="startBtn">▶ Start</button>
+  <button class="btn ghost" id="resetBtn">↺ Reset</button>
+</div></div>
+
+<main class="wrap">
+
+<section class="card" id="overview">
+  <h2>Lesson overview</h2>
+  <div class="grid3">
+    <div class="box"><h4>Learning objectives</h4><ul>
+      <li>Name, describe and give an example of all six validation checks</li>
+      <li>Distinguish validation from verification and describe three verification methods</li>
+      <li>Calculate and use an ISBN-10 check digit</li>
+      <li>Trace and write validation routines in 0478 pseudocode</li></ul></div>
+    <div class="box"><h4>Success criteria</h4><ul>
+      <li>I can recall RLTPFC with an example for each</li>
+      <li>I can explain why validation can't prove data is correct</li>
+      <li>I use REPEAT…UNTIL for a validation loop</li>
+      <li>My check code runs and gives the right output</li></ul></div>
+    <div class="box"><h4>Prior knowledge</h4><ul>
+      <li>REPEAT…UNTIL, IF…ELSE…ENDIF</li><li>Arrays indexed from 1</li><li>LENGTH, SUBSTRING</li><li>Trace tables (Week 9)</li></ul>
+      <h4 style="margin-top:10px">Keywords</h4>validation, verification, range, length, type, presence, format, check digit, double entry, visual check, boundary</div>
+  </div>
+  <h3>Lesson flow at a glance</h3>
+  <div class="scroll"><table>
+    <thead><tr><th>Time</th><th>Phase</th><th>Activity type</th><th>Grouping</th></tr></thead>
+    <tbody id="flowTable"></tbody>
+  </table></div>
+  <div class="alert"><b>Corrections to the source lesson file</b> — the student page has already been adjusted:
+    <ul>
+      <li><b>Challenge "Type check with try/except":</b> try/except is Python and is not valid 0478 pseudocode (the source itself tells students not to submit it). The student version checks every character is between "0" and "9" using SUBSTRING, then outputs the value or NOTINT. Expected output is unchanged: <code>15, NOTINT, 18</code>.</li>
+      <li><b>Presence check "after strip":</b> 0478 has no strip/trim function. Students count the non-space characters instead. Expected output: <code>MISSING, OK, MISSING</code>.</li>
+      <li><b>Registration worked example:</b> <code>OUTPUT "Registered: ", Username, Age</code> joins the values with no space and prints <code>Alice15</code>, not <code>Alice 15</code>. The student version adds <code>" "</code>.</li>
+      <li><b>ISBN example:</b> the source leaves the check digit as "?". It is <b>2</b> (weighted sum 130, 130 + 2 = 132 = 12 × 11). This is now an activity.</li>
+      <li><b>"Tracing code"</b> is in the lesson title but the source has no trace task. Activity C adds one.</li>
+    </ul></div>
+  <h3>Before the lesson</h3>
+  <ul>
+    <li>Share the student page link. One device per student; pairs are fine for Activities A–C.</li>
+    <li>Runners with a <b>Test inputs</b> box feed each <code>INPUT</code> from it, one line per input (an empty line = blank entry). An INTEGER variable given text throws a "type error", so the type-check example deliberately crashes.</li>
+    <li>Progress, code and answers are saved in the browser on that device.</li>
+  </ul>
+</section>
+
+<section class="card phase" id="p1">
+  <div class="sec-head"><div class="num">1</div><h2>Starter: Sensible or correct?</h2><span class="time">0–5 min</span></div>
+  <p>Students sort six scenarios into validation or verification. Auto-checked.</p>
+  <table><tbody>
+    <tr><td>Typing email twice</td><td class="ans">Verification (double entry)</td></tr>
+    <tr><td>Age 250 rejected</td><td class="ans">Validation (range)</td></tr>
+    <tr><td>"You entered John Smith. Correct?"</td><td class="ans">Verification (visual check)</td></tr>
+    <tr><td>Blank surname rejected</td><td class="ans">Validation (presence)</td></tr>
+    <tr><td>Proofreading a letter</td><td class="ans">Verification (proofreading)</td></tr>
+    <tr><td>Age typed as 25, really 26</td><td class="ans">Verification — validation would accept it</td></tr>
+  </tbody></table>
+  <div class="say">Validation asks "could this be true?" Verification asks "is this what you meant?"</div>
+</section>
+
+<section class="card phase" id="p2">
+  <div class="sec-head"><div class="num">2</div><h2>The six checks: RLTPFC + worked examples</h2><span class="time">5–12 min</span></div>
+  <p>Students click the six cards, then test-recite them to a partner with the screen covered. Then they run the worked examples (tabs).</p>
+  <div class="say">Every exam mark for a check needs two things: the <b>name</b> and an <b>example</b>. "Range check" alone scores nothing.</div>
+  <h3>Worked examples (5 tabs)</h3>
+  <table><thead><tr><th>Tab</th><th>Shows</th><th>Default inputs → result</th></tr></thead><tbody>
+    <tr><td>Age, name, password</td><td>Range, presence, length in REPEAT loops</td><td>150, 25, (blank), Alice, abc, secret123 → re-asks 3 times, then <span class="ans">Accepted</span></td></tr>
+    <tr><td>Loop with error message</td><td>IF inside the REPEAT for feedback</td><td>-4, 120, 73 → 2 × "Invalid", then <span class="ans">Score saved: 73</span></td></tr>
+    <tr><td>Registration</td><td>Length range 3–20, age 13–19</td><td>Al, Alice, 15, letmein99 → <span class="ans">Registered: Alice 15</span></td></tr>
+    <tr><td>Verification: double entry</td><td>Compare two entries in a loop</td><td>Mismatch once, then <span class="ans">Password set</span></td></tr>
+    <tr><td>Type check crash</td><td>Why type checks matter</td><td>"fifteen" into an INTEGER → <span class="ans">Type error</span></td></tr>
+  </tbody></table>
+  <p><b>Task:</b> change the inputs so a loop asks <b>exactly three times</b>. This makes students produce two invalid inputs and one valid one, which is test-data thinking.</p>
+  <div class="watch">Students who think a WHILE loop "works the same". It does only if the variable is given a value before the loop. Return to this in the Activity C think–pair–share.</div>
+</section>
+
+<section class="card phase" id="p3">
+  <div class="sec-head"><div class="num">3</div><h2>Activity A: Name that check</h2><span class="time">12–16 min</span></div>
+  <table><thead><tr><th>Rule</th><th>Check</th></tr></thead><tbody>
+    <tr><td>Tickets 1–10, typed 12</td><td class="ans">Range</td></tr>
+    <tr><td>Postcode pattern LLN NLL</td><td class="ans">Format</td></tr>
+    <tr><td>Phone exactly 11 digits</td><td class="ans">Length</td></tr>
+    <tr><td>Surname not empty</td><td class="ans">Presence</td></tr>
+    <tr><td>Quantity typed "ten"</td><td class="ans">Type</td></tr>
+    <tr><td>Scanner recalculates barcode's last digit</td><td class="ans">Check digit</td></tr>
+    <tr><td>Email contains @</td><td class="ans">Format</td></tr>
+    <tr><td>Exam mark 0–100</td><td class="ans">Range</td></tr>
+  </tbody></table>
+  <div class="watch">"Phone exactly 11 digits" answered as <b>range</b>. Range is about the value; length is about the number of characters.</div>
+</section>
+
+<section class="card phase" id="p4">
+  <div class="sec-head"><div class="num">4</div><h2>Activity B: Crack the check digit</h2><span class="time">16–22 min</span></div>
+  <div class="grid2">
+    <div><h3>Part 1 answers</h3>
+      <table><thead><tr><th>Digit</th><th>Weight</th><th>Product</th></tr></thead><tbody>
+      <tr><td>0</td><td>10</td><td>0</td></tr><tr><td>3</td><td>9</td><td>27</td></tr><tr><td>0</td><td>8</td><td>0</td></tr>
+      <tr><td>6</td><td>7</td><td>42</td></tr><tr><td>4</td><td>6</td><td>24</td></tr><tr><td>0</td><td>5</td><td>0</td></tr>
+      <tr><td>6</td><td>4</td><td>24</td></tr><tr><td>1</td><td>3</td><td>3</td></tr><tr><td>5</td><td>2</td><td>10</td></tr>
+      </tbody></table>
+      <p>Sum <span class="ans">130</span> · 130 MOD 11 = <span class="ans">9</span> · check digit = 11 − 9 = <span class="ans">2</span> → ISBN <code>0-306-40615-2</code></p></div>
+    <div><h3>Part 2: Be the scanner</h3>
+      <p>Three missions tick automatically:</p>
+      <ol><li>Scan <code>0306406152</code> → valid</li><li>Change one digit, e.g. <code>0306406162</code> → caught</li><li>Swap two neighbours, e.g. <code>0306406512</code> → caught</li></ol>
+      <div class="say">ISBN-10 always catches a single wrong digit and a swap of two neighbouring digits. That's why the weights are all different.</div>
+      <p class="phase-left">If the remainder is 0, the check digit is 0. If 11 − remainder = 10, the check digit is written <b>X</b>.</p></div>
+  </div>
+  <div class="diff"><div><b>Support</b>Do the first three products together on the board.</div>
+    <div><b>Stretch</b>"Find a typo that is <i>not</i> caught." (Two separate wrong digits can cancel out. For example, <code>1806406152</code> changes the 1st digit by +1 (+10) and the 2nd by +5 (+45). That adds 55, a multiple of 11, so the scanner says VALID.)</div></div>
+</section>
+
+<section class="card phase" id="p5">
+  <div class="sec-head"><div class="num">5</div><h2>Activity C: Trace the validation loop</h2><span class="time">22–28 min</span></div>
+  <div class="grid2">
+<pre class="code">DECLARE Score : INTEGER
+DECLARE Attempts : INTEGER
+Attempts ← 0
+REPEAT
+   INPUT Score
+   Attempts ← Attempts + 1
+   IF Score < 0 OR Score > 100 THEN
+      OUTPUT "Invalid"
+   ENDIF
+UNTIL Score >= 0 AND Score <= 100
+OUTPUT "Accepted after ", Attempts</pre>
+    <div><table><thead><tr><th>Pass</th><th>Score</th><th>Attempts</th><th>OUTPUT</th></tr></thead><tbody>
+      <tr><td>1</td><td>150</td><td>1</td><td>Invalid</td></tr>
+      <tr><td>2</td><td>-5</td><td>2</td><td>Invalid</td></tr>
+      <tr><td>3</td><td>100</td><td>3</td><td>—</td></tr></tbody></table>
+      <p>Final OUTPUT: <span class="ans">Accepted after 3</span> · never read: <span class="ans">42</span></p></div>
+  </div>
+  <div class="say">100 is a <b>boundary</b> value. Exam test-data questions want normal, abnormal (erroneous), boundary and extreme data. 150 and -5 are abnormal; 100 is boundary/extreme.</div>
+  <p><b>Think–pair–share model answer:</b> REPEAT…UNTIL tests the condition at the end, so the input is always asked for at least once. A WHILE loop tests first, so it needs an INPUT before the loop and a second INPUT inside it.</p>
+  <div class="watch">Students who write a 4th row for 42. The trace stops when the UNTIL condition becomes TRUE.</div>
+</section>
+
+<section class="card phase" id="p6">
+  <div class="sec-head"><div class="num">6</div><h2>Activity D: Quick-fire challenges</h2><span class="time">28–38 min</span></div>
+  <p>Individual. Students aim for at least two of the four in 10 minutes and finish the rest for homework (Support: Challenges 2 and 4 first). The test data is pre-loaded in arrays, so challenges need no INPUT. The checklist ticks automatically; the model answer unlocks after a run.</p>
+  <h3>Mark scheme — 12 marks (execute first, 3 per challenge)</h3>
+  <p class="phase-left">No marks if the code does not run. 1 mark for correct output + 1 for each method point.</p>
+  <div class="scroll"><table>
+    <thead><tr><th>Challenge</th><th>Output</th><th>Method marks</th></tr></thead><tbody>
+    <tr><td>1 Presence</td><td class="ans">MISSING<br>OK<br>MISSING</td><td>• Looks inside the string (LENGTH/SUBSTRING)<br>• Empty <i>and</i> space-only rejected</td></tr>
+    <tr><td>2 Range 0–100</td><td class="ans">OK OK BAD BAD</td><td>• Inclusive boundaries (<code>&gt;= 0 AND &lt;= 100</code>)<br>• 0 and 100 accepted</td></tr>
+    <tr><td>3 Type check</td><td class="ans">15<br>NOTINT<br>18</td><td>• Each character compared with "0" and "9"<br>• Doesn't crash on "abc", no try/except</td></tr>
+    <tr><td>4 Length PIN</td><td class="ans">BAD OK BAD</td><td>• <code>LENGTH(Pins[i]) = 4</code><br>• Loops through all PINs</td></tr>
+    <tr><td>⭐ Double entry</td><td class="ans">MATCH<br>MISMATCH<br>TOO SHORT</td><td>Bonus: compares entries (verification) and adds a length check (validation)</td></tr>
+  </tbody></table></div>
+  <h3>Model answers</h3>
+  <details><summary>Challenge 1 — Presence</summary>
+<pre class="code">FOR i ← 1 TO 3
+   Count ← 0
+   FOR j ← 1 TO LENGTH(Names[i])
+      IF SUBSTRING(Names[i], j, 1) <> " " THEN
+         Count ← Count + 1
+      ENDIF
+   NEXT j
+   IF Count = 0 THEN
+      OUTPUT "MISSING"
+   ELSE
+      OUTPUT "OK"
+   ENDIF
+NEXT i</pre><p class="phase-left">Note: <code>IF Names[i] = ""</code> alone outputs OK for " ". Award 2/3 (runs, empty rejected) and use it as a discussion point.</p></details>
+  <details><summary>Challenge 2 — Range</summary>
+<pre class="code">FOR i ← 1 TO 4
+   IF Scores[i] >= 0 AND Scores[i] <= 100 THEN
+      OUTPUT "OK"
+   ELSE
+      OUTPUT "BAD"
+   ENDIF
+NEXT i</pre></details>
+  <details><summary>Challenge 3 — Type check</summary>
+<pre class="code">FOR i ← 1 TO 3
+   IsInt ← TRUE
+   FOR j ← 1 TO LENGTH(Values[i])
+      Ch ← SUBSTRING(Values[i], j, 1)
+      IF Ch < "0" OR Ch > "9" THEN
+         IsInt ← FALSE
+      ENDIF
+   NEXT j
+   IF IsInt = TRUE THEN
+      OUTPUT Values[i]
+   ELSE
+      OUTPUT "NOTINT"
+   ENDIF
+NEXT i</pre></details>
+  <details><summary>Challenge 4 — Length</summary>
+<pre class="code">FOR i ← 1 TO 3
+   IF LENGTH(Pins[i]) = 4 THEN
+      OUTPUT "OK"
+   ELSE
+      OUTPUT "BAD"
+   ENDIF
+NEXT i</pre></details>
+  <details><summary>⭐ Stretch — Double entry + length</summary>
+<pre class="code">FOR i ← 1 TO 3
+   IF First[i] <> Second[i] THEN
+      OUTPUT "MISMATCH"
+   ELSE
+      IF LENGTH(First[i]) < 8 THEN
+         OUTPUT "TOO SHORT"
+      ELSE
+         OUTPUT "MATCH"
+      ENDIF
+   ENDIF
+NEXT i</pre></details>
+  <div class="diff"><div><b>Support</b>Do Challenges 2 and 4 first (one IF each), then 1 and 3.</div>
+    <div><b>Stretch</b>"Extend Challenge 3 so an empty string is NOTINT too." (Check <code>LENGTH = 0</code> first.)</div></div>
+</section>
+
+<section class="card phase" id="pE">
+  <div class="sec-head"><div class="num">7</div><h2>Activity E: Full Paper 2 questions (6 marks each)</h2><span class="time">38–50 min</span></div>
+  <p>About 6 minutes per question, in silence and exam conditions. Students can try their code with their own test inputs. <b>Mark my answer</b> runs it against hidden examiner test data and ticks the mark points. Code that doesn't run with the examiner data scores 0. The model answer and trace unlock after marking.</p>
+  <div class="say">Every bullet in the question is a mark point. Tick them off on the question as you write.</div>
+
+  <h3>Question 1 — Whole-number validation [6]</h3>
+  <p class="phase-left">Input one number at a time; store whole numbers in <code>Accepted[]</code>; re-ask until whole; after 15 stored, output a completion message; clear prompts.</p>
+  <div class="grid2">
+    <div><table><thead><tr><th>#</th><th>Mark point (max 6)</th></tr></thead><tbody>
+      <tr><td>1</td><td>A loop that runs for 15 inputs</td></tr>
+      <tr><td>1</td><td>Input of a number</td></tr>
+      <tr><td>1</td><td>A test for a whole number, e.g. MOD, DIV or ROUND</td></tr>
+      <tr><td>1</td><td>Repeated re-input while the number is not whole, until it is whole</td></tr>
+      <tr><td>1</td><td>Storing the whole number in the correct array element</td></tr>
+      <tr><td>1</td><td>At least two outputs seen: input prompt, error message or completion message</td></tr></tbody></table>
+      <p class="phase-left"><b>Accepted whole-number tests:</b> <code>ROUND(Number, 0) = Number</code>, <code>MOD(Number, 1) = 0</code>, <code>DIV(Number, 1) = Number</code>.</p>
+      <p class="phase-left"><b>Examiner test data (hidden from students):</b> 4.5, 7, -3, 0.25, 12, 5, 8, 1, 0, 100, 2.5, 33, 6, 9, 11, 14, 20, 2. That is 3 non-whole and 15 whole numbers, so all 18 inputs must be used and <code>Accepted[]</code> must hold 7, -3, 12 … 2.</p></div>
+    <div><details open><summary>Model answer</summary>
+<pre class="code">FOR Counter ← 1 TO 15
+    REPEAT
+        OUTPUT "Please enter whole number ", Counter, " of 15"
+        INPUT Number
+        IF ROUND(Number, 0) <> Number
+            THEN
+                OUTPUT "That is not a whole number, please enter it again"
+        ENDIF
+    UNTIL ROUND(Number, 0) = Number
+    Accepted[Counter] ← Number
+NEXT Counter
+OUTPUT "The check has been completed: 15 whole numbers have been stored"</pre></details>
+      <table><thead><tr><th>Counter</th><th>Input</th><th>Whole?</th><th>Action</th></tr></thead><tbody>
+      <tr><td>1</td><td>4.5</td><td>No</td><td>Error message, ask again</td></tr>
+      <tr><td>1</td><td>7</td><td>Yes</td><td>Accepted[1] ← 7</td></tr>
+      <tr><td>2</td><td>-3</td><td>Yes</td><td>Accepted[2] ← -3</td></tr>
+      <tr><td>3</td><td>0.25</td><td>No</td><td>Error message, ask again</td></tr></tbody></table></div>
+  </div>
+  <div class="watch"><code>Counter ← Counter + 1</code> inside the FOR loop. It skips every other element, and the auto-marker flags it by name. Also watch for <code>Number</code> declared as INTEGER: the runner rejects 4.5 with a type error, so it must be REAL.</div>
+
+  <h3>Question 2 — Password validation and verification [6]</h3>
+  <p class="phase-left">Length check (≥ 10 characters, re-ask until valid), then double-entry verification; restart from step 1 on mismatch; no declarations.</p>
+  <div class="grid2">
+    <div><table><thead><tr><th>#</th><th>Mark point (max 6)</th></tr></thead><tbody>
+      <tr><td>1</td><td>First input of the new password</td></tr>
+      <tr><td>1</td><td>Checking the length of the new password</td></tr>
+      <tr><td>1</td><td>Re-entering the password if the length check fails, until it passes</td></tr>
+      <tr><td>1</td><td>Second input of the new password …</td></tr>
+      <tr><td>1</td><td>… and checking that it matches the first input</td></tr>
+      <tr><td>1</td><td>Restarting the whole process, as many times as needed, if verification fails</td></tr>
+      <tr><td>1</td><td>At least two outputs seen: input prompt, error messages or acceptance message</td></tr></tbody></table>
+      <p class="phase-left"><b>Examiner test data (hidden):</b><br>
+      Test 1 (the trace): sunny, riverbank22, riverbank2, riverbank22, riverbank22<br>
+      Test 2 (length re-checked after restart): short, abcdefghij, abcdefghik, x, abcdefghij, abcdefghij<br>
+      Test 3 (two short entries): sunny, abc, riverbank22, riverbank22<br>
+      Each test must use every input and end with exactly one "accepted" message.</p>
+      <p class="phase-left">A WHILE loop with a priming INPUT is also accepted for the length check.</p></div>
+    <div><details open><summary>Model answer</summary>
+<pre class="code">Accepted ← FALSE
+REPEAT
+    REPEAT
+        OUTPUT "Enter a new password with at least 10 characters"
+        INPUT Password
+        IF LENGTH(Password) < 10
+            THEN
+                OUTPUT "Too short: the password needs at least 10 characters"
+        ENDIF
+    UNTIL LENGTH(Password) >= 10
+    OUTPUT "Enter the same password again to confirm it"
+    INPUT Confirm
+    IF Confirm = Password
+        THEN
+            Accepted ← TRUE
+            OUTPUT "Your new password has been accepted"
+        ELSE
+            OUTPUT "The passwords do not match, please start again"
+    ENDIF
+UNTIL Accepted = TRUE</pre></details>
+      <table><thead><tr><th>Input</th><th>Length</th><th>Stage</th><th>Result</th></tr></thead><tbody>
+      <tr><td>sunny</td><td>5</td><td>Validation</td><td>Too short, ask again</td></tr>
+      <tr><td>riverbank22</td><td>11</td><td>Validation</td><td>Passes, ask to confirm</td></tr>
+      <tr><td>riverbank2</td><td>10</td><td>Verification</td><td>No match, back to step 1</td></tr>
+      <tr><td>riverbank22</td><td>11</td><td>Validation</td><td>Passes, ask to confirm</td></tr>
+      <tr><td>riverbank22</td><td>11</td><td>Verification</td><td>Match: accepted</td></tr></tbody></table></div>
+  </div>
+  <div class="watch">The most common lost mark: on a mismatch, only the <b>second</b> entry is asked for again. The question says go back to step 1. The auto-marker catches this, and such an answer typically scores 5/6.</div>
+  <div class="diff"><div><b>Support</b>Give Q1's loop skeleton (<code>FOR Counter ← 1 TO 15 … NEXT Counter</code>), or allow the hint boxes to stay open.</div>
+    <div><b>Stretch</b>Q2: add a format check that the password contains at least one digit, using SUBSTRING in a loop.</div></div>
+</section>
+
+<section class="card phase" id="p7">
+  <div class="sec-head"><div class="num">8</div><h2>Paper 1 style written question</h2><span class="time">50–54 min</span></div>
+  <p>Students write an answer (at least 30 words unlocks marking), then self-mark against the scheme. Silent, exam conditions.</p>
+  <h3>Mark scheme — 4 marks</h3>
+  <table><tbody>
+    <tr><td>1</td><td><b>Range check</b>: data must be within a min–max range, with an example (e.g. age 11–18)</td></tr>
+    <tr><td>1</td><td><b>Length check</b>: data must have a specific number of characters, with an example (e.g. password 8–20 characters)</td></tr>
+    <tr><td>1</td><td><b>Type check</b>: data must be a specific data type, with an example (e.g. age must be an integer)</td></tr>
+    <tr><td>1</td><td>Validation only checks data is <i>reasonable</i>, not that it is <i>true</i> — e.g. age 15 passes even if the real age is 16</td></tr>
+  </tbody></table>
+  <p class="phase-left">Accept a presence check as one of the three in (a). Max 3 for (a). No mark for a check named without an example.</p>
+  <div class="say">Spot-check two answers aloud. Is every "check" paired with an example?</div>
+</section>
+
+<section class="card phase" id="p8">
+  <div class="sec-head"><div class="num">9</div><h2>Exit ticket</h2><span class="time">54–58 min</span></div>
+  <table><thead><tr><th>#</th><th>Question</th><th>Answer</th></tr></thead><tbody>
+    <tr><td>1</td><td>Validation checks data is…</td><td class="ans">reasonable / sensible</td></tr>
+    <tr><td>2</td><td>"Confirm your password" is…</td><td class="ans">double entry verification</td></tr>
+    <tr><td>3</td><td>Loop that always asks at least once</td><td class="ans">REPEAT … UNTIL</td></tr>
+    <tr><td>4</td><td><code>LENGTH(Pin) &lt;&gt; 4</code></td><td class="ans">Length check</td></tr>
+    <tr><td>5</td><td>A check digit detects…</td><td class="ans">mistyped or swapped digits in a code</td></tr>
+  </tbody></table>
+</section>
+
+<section class="card phase" id="p9">
+  <div class="sec-head"><div class="num">10</div><h2>Reflect &amp; close</h2><span class="time">58–60 min</span></div>
+  <p>Red/amber/green for each of the six checks, verification and tracing, plus one tricky thing. Students press <b>"Copy my lesson summary"</b> and paste it to you. It includes challenge scores, both 6-mark question scores, the self-marked exam question, the exit ticket and confidence ratings.</p>
+  <div class="say">Next week continues the craft track — code must still run. Tonight: write RLTPFC from memory, each with an example.</div>
+</section>
+
+<section class="card" id="extra">
+  <h2>Common misconceptions</h2>
+  <div class="scroll"><table>
+    <thead><tr><th>Misconception</th><th>Quick fix</th></tr></thead><tbody>
+    <tr><td>"Validation makes sure data is correct"</td><td>Age 25 vs real 26 — passes every check. Only verification could catch it.</td></tr>
+    <tr><td>Naming a check with no example</td><td>Exam marks need both — make them say "…for example…" every time.</td></tr>
+    <tr><td>Range vs length confusion</td><td>Range = the value (0–100). Length = how many characters (8–20).</td></tr>
+    <tr><td>Double entry seen as validation</td><td>It compares two entries for a match — that's verification.</td></tr>
+    <tr><td>Exclusive boundaries (<code>&gt; 0 AND &lt; 100</code>)</td><td>Test with 0 and 100 — both must be accepted when the range is "0 to 100".</td></tr>
+    <tr><td>Validation loop as WHILE with no priming input</td><td>Use REPEAT…UNTIL; it always runs once.</td></tr>
+    <tr><td>Python in Paper 2 (try/except, strip, ==)</td><td>The runner rejects them with a message — point students to it.</td></tr>
+  </tbody></table></div>
+  <h2 style="margin-top:22px">Homework (15 min)</h2>
+  <p>Write 0478 pseudocode that asks for a <b>username</b> (presence and length 5–15) and a <b>year of birth</b> (range 1900–2025), re-asking until each is valid. Then ask for the username a second time and output "Verified" only if both entries match. Write down three items of test data for the year: normal, boundary and erroneous (e.g. <span class="ans">2008, 1900, 2050</span>).</p>
+</section>
+</main>
+
+<script>
+const phases=[
+ {id:'p1',name:'Starter: Sensible or correct?',m:5,type:'Sort / retrieval',grp:'Individual',c:'#0ea5e9'},
+ {id:'p2',name:'RLTPFC + worked examples',m:7,type:'Direct instruction + run with inputs',grp:'Whole class → pairs',c:'#6366f1'},
+ {id:'p3',name:'A: Name that check',m:4,type:'Classification',grp:'Pairs',c:'#8b5cf6'},
+ {id:'p4',name:'B: Check digit',m:6,type:'Calculation + scanner simulation',grp:'Pairs',c:'#a855f7'},
+ {id:'p5',name:'C: Trace the loop',m:6,type:'Trace table',grp:'Pairs',c:'#ec4899'},
+ {id:'p6',name:'D: Quick-fire challenges',m:10,type:'Short runnable checks',grp:'Individual',c:'#f97316'},
+ {id:'pE',name:'E: Full 6-mark questions',m:12,type:'Paper 2 exam practice (auto-marked)',grp:'Individual, exam conditions',c:'#ef4444'},
+ {id:'p7',name:'Written exam question',m:4,type:'Paper 1 practice + self-mark',grp:'Individual',c:'#eab308'},
+ {id:'p8',name:'Exit ticket',m:4,type:'Assessment',grp:'Individual',c:'#22c55e'},
+ {id:'p9',name:'Reflect & close',m:2,type:'Self-assessment',grp:'Individual',c:'#14b8a6'}
+];
+const TOTAL=60*60;
+let starts=[],acc=0;phases.forEach(p=>{starts.push(acc);acc+=p.m*60;});
+const fmt=s=>{s=Math.max(0,Math.round(s));return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');};
+document.getElementById('flowTable').innerHTML=phases.map((p,i)=>`<tr><td>${starts[i]/60}–${(starts[i]+p.m*60)/60} min</td><td><a href="#${p.id}">${p.name}</a></td><td>${p.type}</td><td>${p.grp}</td></tr>`).join('');
+const track=document.getElementById('track');
+track.innerHTML=phases.map((p,i)=>`<div title="${p.name} (${p.m} min)" style="width:${p.m/60*100}%;background:${p.c}" data-i="${i}"></div>`).join('');
+let elapsed=0,running=false,timer=null,last=null,lastPhase=-1;
+try{const s=JSON.parse(localStorage.getItem('vv0478_teacher_timer')||'null');if(s)elapsed=s.e;}catch(e){}
+function save(){try{localStorage.setItem('vv0478_teacher_timer',JSON.stringify({e:elapsed}));}catch(e){}}
+function current(){for(let i=phases.length-1;i>=0;i--) if(elapsed>=starts[i]) return i; return 0;}
+function render(){
+  document.getElementById('clock').textContent=fmt(TOTAL-elapsed);
+  const i=current(),p=phases[i];
+  if(elapsed>=TOTAL){document.getElementById('phaseNow').textContent='Lesson complete';document.getElementById('phaseLeft').textContent='';}
+  else{document.getElementById('phaseNow').textContent=(i+1)+'. '+p.name;
+    document.getElementById('phaseLeft').textContent='· '+fmt(starts[i]+p.m*60-elapsed)+' left in this phase';}
+  [...track.children].forEach((d,k)=>d.className=k<i?'past':k===i&&elapsed>0?'now':'');
+  document.querySelectorAll('section.phase').forEach(s=>s.classList.toggle('now',elapsed>0&&s.id===p.id&&elapsed<TOTAL));
+}
+function beep(){try{const a=new (window.AudioContext||window.webkitAudioContext)(),o=a.createOscillator(),g=a.createGain();o.connect(g);g.connect(a.destination);o.frequency.value=880;g.gain.value=.08;o.start();o.stop(a.currentTime+.25);}catch(e){}}
+function tick(){const now=Date.now();elapsed+=(now-last)/1000;last=now;
+  if(elapsed>=TOTAL){elapsed=TOTAL;stop();}
+  const i=current(); if(i!==lastPhase&&running){lastPhase=i;beep();}
+  render();save();}
+function start(){running=true;last=Date.now();lastPhase=current();timer=setInterval(tick,250);document.getElementById('startBtn').textContent='⏸ Pause';}
+function stop(){running=false;clearInterval(timer);document.getElementById('startBtn').textContent='▶ Start';}
+document.getElementById('startBtn').onclick=()=>running?stop():start();
+document.getElementById('resetBtn').onclick=()=>{stop();elapsed=0;save();render();};
+track.onclick=e=>{const i=e.target.dataset.i;if(i===undefined)return;elapsed=starts[+i];lastPhase=+i;save();render();
+  document.getElementById(phases[+i].id).scrollIntoView({behavior:'smooth',block:'start'});};
+document.getElementById('printBtn').onclick=()=>{document.querySelectorAll('details').forEach(d=>d.open=true);print();};
+document.getElementById('themeBtn').onclick=()=>{const r=document.documentElement,dark=r.dataset.theme?r.dataset.theme==='dark':matchMedia('(prefers-color-scheme: dark)').matches;r.dataset.theme=dark?'light':'dark';};
+render();
+</script>
+</body>
+</html>
